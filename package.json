@@ -14,6 +14,7 @@
     "heroku-postbuild": "cd client && yarn install && yarn install --only=dev --no-shrinkwrap && yarn run build",
     "client": "cd client && yarn && yarn start",
     "server": "yarn && nodemon server.js",
+    "build": "react-scripts build",
     "dev": "yarn && cd client && yarn && cd .. && ./node_modules/typescript/bin/tsc --project tsconfig.json && concurrently --kill-others-on-fail \"cd server && DEBUG=app yarn server\" \"yarn client\""
   },
   "dependencies": {
