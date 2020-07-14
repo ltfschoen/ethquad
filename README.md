@@ -1,3 +1,7 @@
+# About
+
+WIP: Integrates Slate, Textile, and PowerGate API to connect to Lotus (Filecoin) and IPFS.
+
 # Usage
 
 * TODO
