@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as System from 'slate-react-system';
 import { createPow } from "@textile/powergate-client";
 import { Alert, Container, Col, Row, Spinner } from "react-bootstrap";
-
+import { Greeter } from './components/Greeter';
 import './App.css';
 
 class App extends Component {
@@ -151,6 +151,7 @@ class App extends Component {
       <Container fluid className="App">
         <Row className="justify-content-md-center">
           <Col>
+            <Greeter name='Luke'/>
             { token ? (
                 <Row className="justify-content-md-center">
                   <Col xs={12} md={12}>

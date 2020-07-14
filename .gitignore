@@ -11,6 +11,10 @@
 
 # production
 /build
+/client/build
+
+# typescript
+*.d.ts
 
 # misc
 .DS_Store
