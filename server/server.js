@@ -22,10 +22,13 @@ app.get('/api/endpoint', (req, res, next) => {
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, '../client/build')));
-    
+
   // Handle React routing, return all requests to React app
   app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    // Host the HTML file that redirects to the IPFS hash containing the
+    // front-end website instead of just loading it ../client/build/index.html,
+    // which is hosted from Heroku
+    res.sendFile(path.join(__dirname, '../client/build/ipfs', 'index.html'));
   });
 }
 

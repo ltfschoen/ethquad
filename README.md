@@ -1,10 +1,16 @@
 # About
 
-WIP: Integrates Slate, Textile, and PowerGate API to connect to Lotus (Filecoin) and IPFS.
+WIP:
+* Integrates Slate, Textile, and PowerGate API to connect to Lotus (Filecoin) and IPFS.
+* Decentralised domain provided by Unstoppable Domains at https://ethquad.crypto, which redirects to Herokuapp https://ethquad.herokuapp.com, which redirects to latest IPFS hash the front-end was deployed using the Pinata SDK.
+
+HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
 
 # Usage
 
-* TODO
+* Go to https://ethquad.herokuapp.com.
+
+In future go to https://ethquad.crypto (PENDING AVAILABILITY)
 
 # Development
 
@@ -32,6 +38,9 @@ make localnet
 ```
 heroku login
 heroku apps:create ethquad
+```
+
+```
 git push -f heroku master
 ```
 
@@ -76,6 +85,14 @@ heroku ps:stop web
   * https://github.com/textileio/js-powergate-client
   * https://github.com/jimmylee/next-postgres-sequelize
   * https://github.com/filecoin-project/slate
+
+* Pinata
+  * Explorer https://pinata.cloud/pinexplorer
+  * SDK https://github.com/PinataCloud/Pinata-SDK
+  * https://github.com/polkadot-js/apps
+
+* Unstoppable Domains
+  * https://unstoppabledomains.com/manage?domain=ethquad.crypto
 
 * Other
   * https://hackernoon.com/how-to-take-advantage-of-local-storage-in-your-react-projects-a895f2b2d3f2

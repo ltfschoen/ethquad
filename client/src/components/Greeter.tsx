@@ -5,4 +5,4 @@ export interface GreeterProps {
 }
 
 export const Greeter = (props: GreeterProps) =>
-  <h1>Hello {props.name}</h1>;
+  <h1>Welcome to {props.name}</h1>;

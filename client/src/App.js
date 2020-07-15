@@ -151,7 +151,7 @@ class App extends Component {
       <Container fluid className="App">
         <Row className="justify-content-md-center">
           <Col>
-            <Greeter name='Luke'/>
+            <Greeter name='EthQuad'/>
             { token ? (
                 <Row className="justify-content-md-center">
                   <Col xs={12} md={12}>

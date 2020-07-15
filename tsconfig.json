@@ -6,7 +6,7 @@
     "jsx": "react",                           /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     "declaration": true,                      /* Generates corresponding '.d.ts' file. */
     "sourceMap": true,                        /* Generates corresponding '.map' file. */
-    "outDir": "client/build",                 /* Redirect output structure to the directory. */
+    // "outDir": "client/build",                 /* Redirect output structure to the directory. */
     
     /* Strict Type-Checking Options */
     "strict": true,                           /* Enable all strict type-checking options. */
@@ -25,7 +25,7 @@
 
     /* Experimental Options */
     "experimentalDecorators": true,           /* Enables experimental support for ES7 decorators. */
-    "declarationDir": "client/build",         /* Output directory for generated declaration files. */
+    // "declarationDir": "client/build",         /* Output directory for generated declaration files. */
     "skipLibCheck": true
   }
 }
