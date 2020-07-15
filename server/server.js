@@ -31,26 +31,15 @@ app.get('/api/endpoint', (req, res, next) => {
  * Do not serve static files when redirecting to IPFS hash.
  */
 const BUILD_IPFS_SUBDIRECTORY = 'ipfs';
-if (process.env.IPFS === 'true') {
-  if (process.env.NODE_ENV === 'production') {
-    app.get('*', function(req, res) {
-      res.sendFile(path.join(__dirname, `../client/build/${BUILD_IPFS_SUBDIRECTORY}`, 'index.html'));
-    });
-  } else {
-    app.get('*', function(req, res) {
-      res.sendFile(path.join(__dirname, `../client/build/${BUILD_IPFS_SUBDIRECTORY}`, 'index.html'));
-    });
-  }
-} else {
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build')));
-  
-    app.get('*', function(req, res) {
-      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-    });
-  } else {
-    app.use(express.static(path.join(__dirname, '../client/build')));
-  }
+const isIpfs = process.env.IPFS === 'true';
+if (!isIpfs) {
+  app.use(express.static(path.join(__dirname, '../client/build')));
 }
+
+const subdir = isIpfs ? `../client/build/${BUILD_IPFS_SUBDIRECTORY}` : '../client/build';
+
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, subdir, 'index.html'));
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -10,18 +10,20 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "start": "DEBUG=app node ./server/server.js",
+    "start": "cross-env NODE_ENV=production IPFS=true DEBUG=app node ./server/server.js",
+    "dev:client": "cd client && yarn run start",
+    "dev:start": "cross-env NODE_ENV=development IPFS=false DEBUG=app node ./server/server.js",
     "setup:deps": "yarn && cd client && yarn && cd ..",
-    "dev": "cross-env SKIP_PREFLIGHT_CHECK=true yarn setup:deps && yarn build:tsc && concurrently --kill-others-on-fail \"cd server && cross-env DEBUG=app yarn dev:server\" \"yarn dev:client\"",
-    "dev:ipfs:preview": "yarn setup:deps && yarn build:tsc && yarn build:dev:webpack && yarn build:ipfs && cd server && cross-env NODE_ENV=development IPFS=true DEBUG=app yarn dev:server",
-    "dev:client": "cd client && yarn && yarn start",
-    "dev:server": "yarn && nodemon server.js",
+    "dev": "yarn setup:deps && yarn build:tsc && concurrently --kill-others-on-fail \"cross-env DEBUG=app yarn dev:server\" \"yarn dev:client\"",
+    "dev:ipfs:preview": "yarn setup:deps && yarn build:tsc && yarn build:dev:webpack && yarn build:dev:ipfs && cross-env IPFS=true DEBUG=app yarn dev:server",
+    "dev:server": "node ./server/server.js",
     "build:tsc": "./node_modules/typescript/bin/tsc --project tsconfig.json",
-    "build:ipfs": "node scripts/pinataUploadIpfs.js",
+    "build:dev:ipfs": "cross-env NODE_ENV=development node scripts/pinataUploadIpfs.js",
+    "build:release:ipfs": "cross-env NODE_ENV=production node scripts/pinataUploadIpfs.js",
     "heroku-postbuild": "yarn build:release",
-    "build:release": "cross-env NODE_ENV=production yarn setup:deps && yarn build:tsc && yarn build:release:webpack && yarn build:ipfs",
+    "build:release": "cross-env NODE_ENV=production yarn setup:deps && yarn build:tsc && yarn build:release:webpack && yarn build:release:ipfs",
     "build:dev:webpack": "cd client && ./node_modules/.bin/webpack --mode development --config ./webpack.config.js && cd ../",
-    "build:release:webpack": "cd client && SKIP_PREFLIGHT_CHECK=true ./node_modules/.bin/webpack --mode production --config ./webpack.config.js && cd ../"
+    "build:release:webpack": "cd client && cross-env SKIP_PREFLIGHT_CHECK=true ./node_modules/.bin/webpack --mode production --config ./webpack.config.js && cd ../"
   },
   "dependencies": {
     "@pinata/sdk": "^1.1.10",

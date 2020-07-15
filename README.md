@@ -20,7 +20,7 @@ Note: Access to https://ethquad.crypto is in progress
 * Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku and to match the version they use.
 ```
 nvm use;
-yarn global add nodemon concurrently webpack@^4.42.0;
+yarn global add concurrently webpack@^4.42.0;
 ```
 
 ## Connect to Lotus (Filecoin) and IPFS
@@ -33,7 +33,7 @@ cd docker
 make localnet
 ```
 
-## Develop website locally (with hot reload) without deployment to IPFS
+## Develop website locally without deployment to IPFS
 
 ```
 yarn dev;
@@ -41,7 +41,7 @@ yarn dev;
 
 * Go to http://localhost:3000
 
-## Preview website redirecting to deployed to IPFS (no hot reload)
+## Preview website redirecting to deployed to IPFS
 
 ```
 yarn dev:ipfs:preview
@@ -68,7 +68,11 @@ heroku config:set \
 heroku config
 ```
 
-# Maintenance (Heroku)
+# Troubeshooting
+
+If you get a `nodemon` issue due to server already running on a port just run `ps -ef | grep node` and kill all associated processes `kill -9 <PID>`
+
+# Maintenance
 
 [MAINTENANCE.md](./MAINTENANCE.md)
 
