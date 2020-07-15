@@ -13,7 +13,8 @@ class App extends Component {
     isLoading: false,
     // State keys to store in localStorage
     stateKeysForLocalStorage: ['token'],
-    token: null
+    token: null,
+    websiteIPFSHash: ''
   };
 
   componentDidMount = async () => {
@@ -22,7 +23,9 @@ class App extends Component {
       async () => {
         await this.hydrateStateWithLocalStorage();
         await this.handleCreateToken();
-      });
+      })
+
+    await this.getWebsiteIPFSHash();
 
     // Add event listener to save state to localStorage
     // when user leaves/refreshes the page
@@ -124,6 +127,29 @@ class App extends Component {
     }
   }
 
+  getWebsiteIPFSHash = async () => {
+    console.log('getWebsiteIPFSHash');
+
+    const url = new URL(`${window.location.href}api/getWebsiteIPFSHash`);
+
+    this.setState({ isLoading: true });
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    this.setState({ isLoading: false });
+    if (response.status !== 200) {
+      this.setState({
+        websiteIPFSHash: response.statusText,
+      });
+      return;
+    };
+    const json = await response.json();
+    console.log('Response from handling request for Website IPFS Hash in json: ', json);
+    this.setState({
+      websiteIPFSHash: json.websiteIPFSHash,
+    });
+  }
+
   updateLocalStorage = (key, value) => {
     console.log('updateLocalStorage');
     // Update react state
@@ -145,18 +171,25 @@ class App extends Component {
     }
   }
 
+  handleCreateFilecoinStorageDeal = () => {
+    console.log('handleCreateFilecoinStorageDeal');
+  }
+
   render() {
-    const { info, isLoading, token } = this.state;
+    const { info, isLoading, token, websiteIPFSHash } = this.state;
     return (
       <Container fluid className="App">
         <Row className="justify-content-md-center">
           <Col>
             <Greeter name='EthQuad'/>
+            <Alert variant="info">
+              Website IPFS Hash: { websiteIPFSHash }
+            </Alert>
             { token ? (
                 <Row className="justify-content-md-center">
                   <Col xs={12} md={12}>
                     <Alert variant="info">
-                      Token: {token}
+                      Token: { token }
                     </Alert>
                   </Col>
                 </Row>
@@ -179,6 +212,13 @@ class App extends Component {
             }
             <System.CreateFilecoinAddress
               onSubmit={this.handleCreateAddress}
+            />
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center">
+          <Col xs={12} md={12}>
+            <System.CreateFilecoinStorageDeal
+              onSubmit={this.handleCreateFilecoinStorageDeal}
             />
           </Col>
         </Row>

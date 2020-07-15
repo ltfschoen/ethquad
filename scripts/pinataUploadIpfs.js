@@ -8,8 +8,8 @@
 require('dotenv').config()
 const fs = require('fs');
 const path = require('path');
-const pinataSDK = require('@pinata/sdk');
 const { execSync } = require('child_process');
+const { connectToPinata } = require('../helpers/connectToPinata');
 
 /**
  * Duplicate of https://github.com/polkadot-js/dev/blob/master/packages/dev/scripts/execSync.js
@@ -43,7 +43,7 @@ function writeFiles(name, content) {
 function updateGithub(hash) {
   execute('git add --all .');
   execute(`git commit --no-status --quiet -m "[CI Skip] publish/ipfs ${hash} skip-checks: true"`);
-  execute(`git push ${REPO} HEAD:${process.env.GITHUB_REF}`, true);
+  execute(`git push origin ${REPO}`);
 }
 
 /**
@@ -69,7 +69,7 @@ async function pin() {
   const html = `<!DOCTYPE html>
 <html>
   <head>
-    <title>Redirecting to IPFS gateway</title>
+    <title>Redirecting to Official IPFS Gateway</title>
     <meta http-equiv="refresh" content="0; url=${url}" />
     <style>
       body { font-family: sans-serif; line-height: 1.5rem; padding: 2rem; text-align: center }
@@ -119,14 +119,10 @@ async function unpin(exclude) {
  * Reference: https://github.com/PinataCloud/Pinata-SDK
  */
 async function main() {
-  pinata = await pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_SECRET_API_KEY);
-  const result = await pinata.testAuthentication();
-  if (result.authenticated) {
-    console.log('Successfully authenticated with Pinata');
+  pinata = await connectToPinata();
+  if (pinata) {
     const hash = await pin();
-    await unpin(hash);
-  } else {
-    console.error('Unable to authenticate with Pinata');
+    await unpin(hash);  
   }
 }
 

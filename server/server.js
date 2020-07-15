@@ -3,6 +3,7 @@ const debug = require('debug')('app');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const { connectToPinata } = require('../helpers/connectToPinata');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,14 +15,41 @@ console.log('EthQuad API');
 console.log('NODE_ENV', process.env.NODE_ENV);
 console.log('IPFS', process.env.IPFS);
 
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({status: err.status, message: err.message})
+});
+
 /**
  * Example: http://localhost:3000/api/endpoint?query=<PARAMETER>
+ * http://localhost:5000/api/getWebsiteIPFSHash
  */
-app.get('/api/endpoint', (req, res, next) => {
-  res.send({
-    message: 'Hello'
-  })
-});
+app.get('/api/getWebsiteIPFSHash',
+  // Middleware chain
+  async (req, res, next) => {
+    console.log('/api/getWebsiteIPFSHash');
+    console.log('Connecting to Pinata');
+    pinata = await connectToPinata();
+    if (pinata) {
+      console.log('Retrieving Pin List');
+      const pinList = await pinata.pinList(); 
+      let filtered;
+      let websiteIPFSHash;
+      if (pinList.count > 0) {
+        filtered = pinList.rows
+          .filter((row) => !row.date_unpinned);
+        if (filtered.length == 1) {
+          websiteIPFSHash = filtered[0].ipfs_pin_hash;
+          console.log('Retrieved Pin Hash: ', websiteIPFSHash);
+          res.send({
+            websiteIPFSHash 
+          });
+        }
+      }
+    } else {
+      throw {status: 500, message: 'Unable to obtain Pinata Pin List'};
+    }
+  }
+);
 
 /**
  * Handle React routing, return all requests to React app.

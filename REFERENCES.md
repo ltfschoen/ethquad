@@ -24,5 +24,11 @@
   * https://unstoppabledomains.com/manage?domain=ethquad.crypto
   * https://www.youtube.com/watch?v=I9vTeAtELOk&feature=youtu.be
 
+* Other HackFS Projects
+  * https://github.com/Aimeedeer/bigannouncement
+
 * Other
   * https://hackernoon.com/how-to-take-advantage-of-local-storage-in-your-react-projects-a895f2b2d3f2
+  * TODO
+    * https://github.com/lsm/react-express-webpack-typescript
+    * https://github.com/vikpe/react-webpack-typescript-starter
