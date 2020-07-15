@@ -45,7 +45,7 @@ Note: Access to https://ethquad.crypto is in progress
 * Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku and to match the version they use.
 ```
 nvm use;
-yarn global add concurrently webpack@^4.42.0;
+yarn global add concurrently;
 ```
 
 ## Connect to Lotus (Filecoin) and IPFS
@@ -75,14 +75,14 @@ yarn dev:ipfs:preview
 * Go to http://localhost:5000
   * Important note: Use port 5000 since only running from server instead of client with proxy.
 
-# Deployment (Heroku)
+# Deployment (IPFS & Heroku)
 
-Push changes to Heroku
+Push changes to IPFS & Heroku
 ```
 git push heroku master
 ```
 
-Note: Heroku will build dependencies, then run the "heroku-postbuild" script in package.json
+Note: Heroku will build dependencies, then run the "heroku-postbuild" script in package.json. The "build:release:ipfs" script will deploy the front-end to an IPFS hash.
 
 Set Heroku Environment Variables to match the contents of the .env file. Replace missing values below:
 ```
