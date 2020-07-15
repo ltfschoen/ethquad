@@ -10,6 +10,10 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+console.log('EthQuad API');
+console.log('NODE_ENV', process.env.NODE_ENV);
+console.log('IPFS', process.env.IPFS);
+
 /**
  * Example: http://localhost:3000/api/endpoint?query=<PARAMETER>
  */
@@ -19,17 +23,34 @@ app.get('/api/endpoint', (req, res, next) => {
   })
 });
 
-if (process.env.NODE_ENV === 'production') {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, '../client/build')));
-
-  // Handle React routing, return all requests to React app
-  app.get('*', function(req, res) {
-    // Host the HTML file that redirects to the IPFS hash containing the
-    // front-end website instead of just loading it ../client/build/index.html,
-    // which is hosted from Heroku
-    res.sendFile(path.join(__dirname, '../client/build/ipfs', 'index.html'));
-  });
+/**
+ * Handle React routing, return all requests to React app.
+ * When the IPFS environment variable is set, host the HTML file that
+ * redirects to the IPFS hash containing the front-end website instead of
+ * loading it from Heroku at ../client/build/index.html.
+ * Do not serve static files when redirecting to IPFS hash.
+ */
+const BUILD_IPFS_SUBDIRECTORY = 'ipfs';
+if (process.env.IPFS === 'true') {
+  if (process.env.NODE_ENV === 'production') {
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, `../client/build/${BUILD_IPFS_SUBDIRECTORY}`, 'index.html'));
+    });
+  } else {
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, `../client/build/${BUILD_IPFS_SUBDIRECTORY}`, 'index.html'));
+    });
+  }
+} else {
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+  
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    });
+  } else {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+  }
 }
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

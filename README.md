@@ -3,6 +3,7 @@
 WIP:
 * Integrates Slate, Textile, and PowerGate API to connect to Lotus (Filecoin) and IPFS.
 * Decentralised domain provided by Unstoppable Domains at https://ethquad.crypto, which redirects to Herokuapp https://ethquad.herokuapp.com, which redirects to latest IPFS hash the front-end was deployed using the Pinata SDK.
+* Express.js API served from https://ethquad.herokuapp.com
 
 HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
 
@@ -10,16 +11,19 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
 
 * Go to https://ethquad.herokuapp.com.
 
-In future go to https://ethquad.crypto (PENDING AVAILABILITY)
+Note: Access to https://ethquad.crypto is in progress
 
 # Development
 
-* Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku.
+## Install dependencies
+
+* Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku and to match the version they use.
 ```
 nvm use;
 yarn global add nodemon concurrently webpack@^4.42.0;
-DEBUG=app yarn dev;
 ```
+
+## Connect to Lotus (Filecoin) and IPFS
 
 * Download and run Docker
 * Clone https://github.com/textileio/powergate
@@ -29,70 +33,45 @@ cd docker
 make localnet
 ```
 
+## Develop website locally (with hot reload) without deployment to IPFS
+
+```
+yarn dev;
+```
+
 * Go to http://localhost:3000
 
-# Maintenance
-
-## Deploy (Heroku)
+## Preview website redirecting to deployed to IPFS (no hot reload)
 
 ```
-heroku login
-heroku apps:create ethquad
+yarn dev:ipfs:preview
 ```
 
+* Go to http://localhost:5000
+  * Important note: Use port 5000 since only running from server instead of client with proxy.
+
+# Deployment (Heroku)
+
+Push changes to Heroku
 ```
-git push -f heroku master
+git push heroku master
 ```
+
+Note: Heroku will build dependencies, then run the "heroku-postbuild" script in package.json
 
 Set Heroku Environment Variables to match the contents of the .env file. Replace missing values below:
 ```
 heroku config:set \
-  KEY=VALUE
+  KEY1=VALUE \
+  KEY2=VALUE
+
+heroku config
 ```
 
-Open the production website
-```
-heroku open
-```
+# Maintenance (Heroku)
 
-## Debug
-
-```
-heroku ps:scale web=1:free
-heroku ps:scale web=2:standard-2x
-heroku ps
-heroku open
-heroku logs --tail
-heroku restart
-heroku ps:stop web
-```
+[MAINTENANCE.md](./MAINTENANCE.md)
 
 # References
 
-* Eth 2.0
-  * Specs https://github.com/ethereum/eth2.0-specs
-  * Detailed spec https://github.com/ethereum/eth2.0-specs/blob/dev/ssz/simple-serialize.md
-  * Human version https://hackmd.io/Zc8wlp_LRfChQ6TyLC1kxA#Eth1
-  * Human version covering core parts of the spec https://benjaminion.xyz/eth2-annotated-spec/phase0/beacon-chain/
-  * Human version "Phase 0 for Humans [v0.10.0]" https://notes.ethereum.org/@djrtwo/Bkn3zpwxB
-  * Slides slides by hwwhww there: https://docs.google.com/presentation/d/1JlQ8fVZUvt7ywRcI7mj1ExmPxcNII2xKT4lkgnkq7gU/edit#slide=id.g52948b393d_5_1067
-
-* Textile, Slate, and Powergate
-  * [Building an App with Filecoin from scratch - using Slate Components & Powergate](https://www.youtube.com/watch?v=FJjPMKRy8xQ)
-  * https://slate.host/experiences/generate-powergate-token
-  * https://github.com/textileio/lotus-devnet
-  * https://github.com/textileio/powergate#localnet-mode
-  * https://github.com/textileio/js-powergate-client
-  * https://github.com/jimmylee/next-postgres-sequelize
-  * https://github.com/filecoin-project/slate
-
-* Pinata
-  * Explorer https://pinata.cloud/pinexplorer
-  * SDK https://github.com/PinataCloud/Pinata-SDK
-  * https://github.com/polkadot-js/apps
-
-* Unstoppable Domains
-  * https://unstoppabledomains.com/manage?domain=ethquad.crypto
-
-* Other
-  * https://hackernoon.com/how-to-take-advantage-of-local-storage-in-your-react-projects-a895f2b2d3f2
+[REFERENCES.md](./REFERENCES.md)

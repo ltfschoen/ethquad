@@ -11,18 +11,22 @@
   },
   "scripts": {
     "start": "DEBUG=app node ./server/server.js",
-    "heroku-postbuild": "cd client && yarn && yarn install --only=dev --no-shrinkwrap && yarn run build",
-    "client": "cd client && yarn && yarn start",
-    "server": "yarn && nodemon server.js",
-    "dev": "yarn && cd client && yarn && cd .. && yarn build:release:tsc && concurrently --kill-others-on-fail \"cd server && DEBUG=app yarn server\" \"yarn client\"",
-    "build": "yarn build:release:tsc && yarn run build:release:webpack && yarn run build:release:ipfs",
-    "build:release:webpack": "cd client && yarn && webpack --mode production --config ./webpack.config.js",
-    "build:release:tsc": "./node_modules/typescript/bin/tsc --project tsconfig.json",
-    "build:release:ipfs": "node scripts/pinataUploadIpfs.js"
+    "setup:deps": "yarn && cd client && yarn && cd ..",
+    "dev": "cross-env SKIP_PREFLIGHT_CHECK=true yarn setup:deps && yarn build:tsc && concurrently --kill-others-on-fail \"cd server && cross-env DEBUG=app yarn dev:server\" \"yarn dev:client\"",
+    "dev:ipfs:preview": "yarn setup:deps && yarn build:tsc && yarn build:dev:webpack && yarn build:ipfs && cd server && cross-env NODE_ENV=development IPFS=true DEBUG=app yarn dev:server",
+    "dev:client": "cd client && yarn && yarn start",
+    "dev:server": "yarn && nodemon server.js",
+    "build:tsc": "./node_modules/typescript/bin/tsc --project tsconfig.json",
+    "build:ipfs": "node scripts/pinataUploadIpfs.js",
+    "heroku-postbuild": "yarn build:release",
+    "build:release": "cross-env NODE_ENV=production yarn setup:deps && yarn build:tsc && yarn build:release:webpack && yarn build:ipfs",
+    "build:dev:webpack": "cd client && ./node_modules/.bin/webpack --mode development --config ./webpack.config.js && cd ../",
+    "build:release:webpack": "cd client && SKIP_PREFLIGHT_CHECK=true ./node_modules/.bin/webpack --mode production --config ./webpack.config.js && cd ../"
   },
   "dependencies": {
     "@pinata/sdk": "^1.1.10",
     "body-parser": "^1.19.0",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "typescript": "^3.9.6"

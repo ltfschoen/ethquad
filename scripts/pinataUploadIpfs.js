@@ -25,10 +25,11 @@ function execute(cmd, noLog) {
 };
 
 const GATEWAY = 'https://ipfs.io/ipfs/';
-const PATH_SOURCE_CODE = path.join(__dirname, '..', 'client', 'build')
+const PATH_SOURCE_CODE = path.join(__dirname, '..', 'client', 'build');
 const WOPTS = { encoding: 'utf8', flag: 'w' };
 const REPO = `git@github.com:ltfschoen/ethquad.git`;
 const BUILD_IPFS_SUBDIRECTORY = 'ipfs';
+const PATH_IPFS = path.join(__dirname, '..', 'client', 'build', BUILD_IPFS_SUBDIRECTORY);
 let pinata;
 
 function writeFiles(name, content) {
@@ -52,7 +53,7 @@ function updateGithub(hash) {
  * which also serves as the EthQuad server-side API.
  */
 async function pin() {
-  execute(`mkdir -p ./client/build/${BUILD_IPFS_SUBDIRECTORY}`);
+  execute(`mkdir -p ${PATH_IPFS}`);
   const options = {
     pinataMetadata: {
       name: 'EthQuad',
@@ -61,9 +62,10 @@ async function pin() {
       wrapWithDirectory: true
     }
   };
+  console.log('Generating Pin...');
   const result = await pinata.pinFromFS(PATH_SOURCE_CODE, options);
   console.log('Generated Pin with IPFS hash: ', result);
-  const url = `${GATEWAY}${result.IpfsHash}/`;
+  const url = `${GATEWAY}${result.IpfsHash}/build/`;
   const html = `<!DOCTYPE html>
 <html>
   <head>
@@ -83,8 +85,9 @@ async function pin() {
   console.log('Writing files for redirecting to IPFS hash of website');
   writeFiles('index.html', html);
   writeFiles('pin.json', JSON.stringify(result));
-  // updateGithub(result.IpfsHash);
-
+  if (process.env.NODE_ENV !== 'production') {
+    // updateGithub(result.IpfsHash);
+  }
   console.log(`Pinned IPFS hash: ${result.IpfsHash}`);
 
   return result.IpfsHash;
@@ -121,11 +124,10 @@ async function main() {
   if (result.authenticated) {
     console.log('Successfully authenticated with Pinata');
     const hash = await pin();
-    // await unpin(hash);
+    await unpin(hash);
   } else {
     console.error('Unable to authenticate with Pinata');
   }
-
 }
 
 main()
