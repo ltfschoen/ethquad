@@ -16,7 +16,7 @@
     "server": "yarn && nodemon server.js",
     "dev": "yarn && cd client && yarn && cd .. && yarn build:release:tsc && concurrently --kill-others-on-fail \"cd server && DEBUG=app yarn server\" \"yarn client\"",
     "build": "yarn build:release:tsc && yarn run build:release:webpack && yarn run build:release:ipfs",
-    "build:release:webpack": "cd client && yarn && ./node_modules/.bin/webpack --mode production --config ./webpack.config.js",
+    "build:release:webpack": "cd client && yarn && webpack --mode production --config ./webpack.config.js",
     "build:release:tsc": "./node_modules/typescript/bin/tsc --project tsconfig.json",
     "build:release:ipfs": "node scripts/pinataUploadIpfs.js"
   },

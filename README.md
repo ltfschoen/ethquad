@@ -14,10 +14,10 @@ In future go to https://ethquad.crypto (PENDING AVAILABILITY)
 
 # Development
 
-* Install dependencies and run server and front-end.
+* Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku.
 ```
 nvm use;
-yarn global add nodemon concurrently;
+yarn global add nodemon concurrently webpack@^4.42.0;
 DEBUG=app yarn dev;
 ```
 
