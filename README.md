@@ -1,11 +1,28 @@
 # About
 
-WIP:
-* Integrates Slate, Textile, and PowerGate API to connect to Lotus (Filecoin) and IPFS.
-* Decentralised domain provided by Unstoppable Domains at https://ethquad.crypto, which redirects to Herokuapp https://ethquad.herokuapp.com, which redirects to latest IPFS hash the front-end was deployed using the Pinata SDK.
-* Express.js API served from https://ethquad.herokuapp.com
-
 HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
+
+## Roadmap
+
+* [X] Frontend React.js & TypeScript boilerplate (./client)
+* [X] Backend Express.js API boilerplate (./server). Served at https://ethquad.herokuapp.com/api
+* [X] Local Docker container setup process for running with Textile.io storage API (PowerGate) that interacts with Lotus (Filecoin) and IPFS
+* [ ] Production Docker container running with Textile.io storage API (PowerGate) that interacts with Lotus (Filecoin) and IPFS
+* [X] Frontend Slate Design System UI components that interact with PowerGate (./client/src/)
+  * [X] Generate a Powergate token. Store or retrieve (if exists) from web browser Local Storage. Check if retrieved existing Powergate token invalid due to restarting local Docker container with Textile PowerGate
+  * [X] Create and view multiple Filecoin Addresses and associate them with PowerGate token.
+* [X] Frontend deployed to IPFS Address using Pinata SDK
+  * [X] Request decentralised domain name from Unstoppable Domains (https://ethquad.crypto)
+  * [X] Deployment script generate a new Pin and Unpins all previous (./scripts/pinataUploadIpfs.js)
+  * [X] Preview using Official IPFS Gateway (i.e. https://ipfs.io/ipfs/<IPFS_HASH>) in development environment (`yarn dev:ipfs:preview`)
+  * [ ] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
+    * Pending assistance from Slack group #hfs-sponsor-unstoppable-team https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594788644226200
+* [ ] Frontend deployed to IPFS Address using Fleek Continuous Deployment using Github
+* [ ] Logo deployed using Fleek Stage App JS SDK (@fleekhq/fleek-cli). See https://docs.fleek.co/storage/fleek-storage-js/
+  * [ ] Upload logo to publish it to IPFS, published to DNS, with a CDN and File Compression.
+  * [ ] Reference the logo file using the Fleek Storage URL
+* [ ] Desktop Fleek Space Daemon integration to share encrypted files privately with peers using Textile/IPFS node on Local Machine
+* [ ] Textiles ThreadDB/Buckets (instead of Fleek Space Daemon) since not running private Textile/IPFS node on Local Machine
 
 # Usage
 
@@ -36,7 +53,7 @@ make localnet
 ## Develop website locally without deployment to IPFS
 
 ```
-yarn dev;
+yarn dev
 ```
 
 * Go to http://localhost:3000
