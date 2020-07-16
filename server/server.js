@@ -8,6 +8,7 @@ const { connectToPinata } = require('../helpers/connectToPinata');
 
 const app = express();
 const port = process.env.PORT || 5000;
+const isProd = process.env.NODE_ENV === 'production';
 
 const corsWhitelist = [
   'http://localhost:5000',
@@ -18,12 +19,15 @@ const corsOptions = {
   'allowedHeaders': ['Content-Type'],
   'exposedHeaders': ['Content-Type'],
   'origin': function (origin, callback) {
-    if (corsWhitelist.indexOf(origin) !== -1) {
+    // Do not want to block REST tools or server-to-server requests
+    // when running with `yarn dev` on localhost:3000
+    if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
     }
   },
+  // "origin": "*",
   'methods': 'GET,HEAD'
 };
 
@@ -47,7 +51,7 @@ app.use((err, req, res, next) => {
 app.get('/api/getWebsiteIPFSHash', cors(corsOptions),
   // Middleware chain
   async (req, res, next) => {
-    console.log('/api/getWebsiteIPFSHash');
+    console.log('Received GET request at API endpoint /api/getWebsiteIPFSHash');
     console.log('Connecting to Pinata');
     pinata = await connectToPinata();
     if (pinata) {
