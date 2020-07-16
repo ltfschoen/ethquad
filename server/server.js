@@ -3,11 +3,32 @@ const debug = require('debug')('app');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 const { connectToPinata } = require('../helpers/connectToPinata');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+const corsWhitelist = [
+  'http://localhost:5000',
+  'https://ipfs.io'
+];
+// https://www.npmjs.com/package/cors#configuration-options
+const corsOptions = {
+  'allowedHeaders': ['Content-Type'],
+  'exposedHeaders': ['Content-Type'],
+  'origin': function (origin, callback) {
+    if (corsWhitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  'methods': 'GET,HEAD'
+};
+
+// Enables CORS to allow queries from Website IPFS Hash to its Express API
+// app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,7 +44,7 @@ app.use((err, req, res, next) => {
  * Example: http://localhost:3000/api/endpoint?query=<PARAMETER>
  * http://localhost:5000/api/getWebsiteIPFSHash
  */
-app.get('/api/getWebsiteIPFSHash',
+app.get('/api/getWebsiteIPFSHash', cors(corsOptions),
   // Middleware chain
   async (req, res, next) => {
     console.log('/api/getWebsiteIPFSHash');
@@ -70,4 +91,4 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, subdir, 'index.html'));
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`CORS-enabled web server listening on port ${port}`));
