@@ -16,7 +16,7 @@
 # typescript
 *.d.ts
 *.js.map
-/client/src/components/*.js
+/client/src/components/Greeter.js
 
 # misc
 .DS_Store
