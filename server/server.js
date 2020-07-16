@@ -4,9 +4,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
+const { findPinsForEnv } = require('../helpers/pinataFindPinsForEnv');
 const beaconMiddleware = require('./middleware/beaconMiddleware.js');
 const { connectToPinata } = require('./helpers/connectToPinata');
-const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -56,18 +57,21 @@ app.get('/api/getWebsiteIPFSHash', cors(corsOptions),
     pinata = await connectToPinata();
     if (pinata) {
       console.log('Retrieving Pin List');
-      const pinList = await pinata.pinList(); 
+      const pinList = await findPinsForEnv(pinata);
       let filtered;
       let websiteIPFSHash;
       if (pinList.count > 0) {
         filtered = pinList.rows
           .filter((row) => !row.date_unpinned);
+        console.log('Found pinned IPFS hashes for current environment: ', filtered);
         if (filtered.length == 1) {
           websiteIPFSHash = filtered[0].ipfs_pin_hash;
           console.log('Retrieved Pin Hash: ', websiteIPFSHash);
           res.send({
             websiteIPFSHash 
           });
+        } else {
+          console.error('Unable to find pinned IPFS hash for current environment');
         }
       }
     } else {

@@ -11,6 +11,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { connectToPinata } = require('../server/helpers/connectToPinata');
 const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
+const { findPinsForEnv } = require('../helpers/pinataFindPinsForEnv');
 
 /**
  * Duplicate of https://github.com/polkadot-js/dev/blob/master/packages/dev/scripts/execSync.js
@@ -98,29 +99,18 @@ async function pin() {
   return result.IpfsHash;
 }
 
-// Unpin previous Website IPFS Hashes of the currrent environment
+// Unpin previous Website IPFS Hashes of the current environment
 // that we are no longer using
 // Reference: https://github.com/PinataCloud/Pinata-SDK#pinlist
 async function unpin(exclude) {
-  const metadataFilter = {
-    keyvalues: {
-      // Check the value of the key `env` matches our current environment
-      env: {
-        value: IS_PROD ? 'production' : 'development',
-        op: 'eq'
-      }
-    }
-  };
-  const filters = {
-    status: 'pinned',
-    metadata: metadataFilter
-  };
-  const result = await pinata.pinList(filters);
-
-  if (result.count > 1) {
-    const filtered = result.rows
+  console.log(`Unpinning previous website IPFS hashes of ${IS_PROD ? 'production' : 'development'} environment`);
+  const pinList = await findPinsForEnv(pinata);
+  console.log('Found list of IPFS hashes for current environment: ', pinList);
+  if (pinList.count > 1) {
+    const filtered = pinList.rows
       .map(({ ipfs_pin_hash: hash }) => hash)
       .filter((hash) => hash !== exclude);
+    console.log('Found old IPFS hashes for current environment to Unpin: ', filtered);
 
     if (filtered.length) {
       await Promise.all(
