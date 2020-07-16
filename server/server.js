@@ -17,8 +17,8 @@ const corsWhitelist = [
 ];
 // https://www.npmjs.com/package/cors#configuration-options
 const corsOptions = {
-  'allowedHeaders': ['Content-Type'],
-  'exposedHeaders': ['Content-Type'],
+  'allowedHeaders': ['Content-Type','Authorization','Origin','Accept'],
+  'exposedHeaders': ['Content-Type','Authorization','Origin','Accept'],
   'origin': function (origin, callback) {
     // Do not want to block REST tools or server-to-server requests
     // when running with `yarn dev` on localhost:3000
@@ -29,7 +29,7 @@ const corsOptions = {
     }
   },
   // "origin": "*",
-  'methods': 'GET,HEAD'
+  'methods': 'GET,POST,HEAD,OPTIONS'
 };
 
 // Enables CORS to allow queries from Website IPFS Hash to its Express API
@@ -77,6 +77,7 @@ app.get('/api/getWebsiteIPFSHash', cors(corsOptions),
   }
 );
 
+app.options('*', cors())
 app.get('/api/beacon/chainhead', cors(corsOptions),
   // Middleware chain
   async (req, res, next) => {
