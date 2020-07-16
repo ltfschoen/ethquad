@@ -74,7 +74,7 @@ const main = async () => {
   // console.log('Updated record of IPFS redirection hash for domain name: ', response);
 
   // const newTraditionalDomainRedirectionUrl = 'https://ethquad.herokuapp.com';
-  // const response = await ResolverContractInstance.methods.set('???.html.value', newTraditionalDomainRedirectionUrl, tokenId).send();
+  // const response = await ResolverContractInstance.methods.set('ipfs.redirect_domain.value', newTraditionalDomainRedirectionUrl, tokenId).send();
   // console.log('Updated record of Traditional Domain Redirection URL for domain name: ', response);
 
   // FIXME - See issue https://github.com/unstoppabledomains/resolution/issues/73
