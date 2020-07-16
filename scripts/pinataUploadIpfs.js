@@ -9,7 +9,8 @@ require('dotenv').config()
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { connectToPinata } = require('../helpers/connectToPinata');
+const { connectToPinata } = require('../server/helpers/connectToPinata');
+const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
 
 /**
  * Duplicate of https://github.com/polkadot-js/dev/blob/master/packages/dev/scripts/execSync.js
@@ -28,7 +29,7 @@ const GATEWAY = 'https://ipfs.io/ipfs/';
 const PATH_SOURCE_CODE = path.join(__dirname, '..', 'client', 'build');
 const WOPTS = { encoding: 'utf8', flag: 'w' };
 const REPO = `git@github.com:ltfschoen/ethquad.git`;
-const BUILD_IPFS_SUBDIRECTORY = 'ipfs';
+
 const PATH_IPFS = path.join(__dirname, '..', 'client', 'build', BUILD_IPFS_SUBDIRECTORY);
 let pinata;
 
@@ -56,7 +57,11 @@ async function pin() {
   execute(`mkdir -p ${PATH_IPFS}`);
   const options = {
     pinataMetadata: {
-      name: 'EthQuad',
+      // Store frontend at different IPFS location in development and production
+      name: IS_PROD ? 'EthQuad-prod' : 'EthQuad-dev',
+      keyvalues: {
+        env: IS_PROD ? 'production' : 'development'
+      }
     },
     pinataOptions: {
       wrapWithDirectory: true
@@ -77,7 +82,7 @@ async function pin() {
     </style>
   </head>
   <body>
-    <p>Redirecting to: </p>
+    <p>Redirecting to ${IS_PROD ? 'production' : 'development'}: </p>
     <p><a href="${url}">${url}</a></p>
   </body>
 </html>`;
@@ -85,7 +90,7 @@ async function pin() {
   console.log('Writing files for redirecting to IPFS hash of website');
   writeFiles('index.html', html);
   writeFiles('pin.json', JSON.stringify(result));
-  if (process.env.NODE_ENV !== 'production') {
+  if (!IS_PROD) {
     // updateGithub(result.IpfsHash);
   }
   console.log(`Pinned IPFS hash: ${result.IpfsHash}`);
@@ -93,8 +98,24 @@ async function pin() {
   return result.IpfsHash;
 }
 
+// Unpin previous Website IPFS Hashes of the currrent environment
+// that we are no longer using
+// Reference: https://github.com/PinataCloud/Pinata-SDK#pinlist
 async function unpin(exclude) {
-  const result = await pinata.pinList({ status: 'pinned' });
+  const metadataFilter = {
+    keyvalues: {
+      // Check the value of the key `env` matches our current environment
+      env: {
+        value: IS_PROD ? 'production' : 'development',
+        op: 'eq'
+      }
+    }
+  };
+  const filters = {
+    status: 'pinned',
+    metadata: metadataFilter
+  };
+  const result = await pinata.pinList(filters);
 
   if (result.count > 1) {
     const filtered = result.rows

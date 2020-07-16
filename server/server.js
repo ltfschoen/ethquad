@@ -5,11 +5,10 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const beaconMiddleware = require('./middleware/beaconMiddleware.js');
-const { connectToPinata } = require('../helpers/connectToPinata');
-
+const { connectToPinata } = require('./helpers/connectToPinata');
+const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
 const app = express();
 const port = process.env.PORT || 5000;
-const isProd = process.env.NODE_ENV === 'production';
 
 const corsWhitelist = [
   'http://localhost:5000',
@@ -105,7 +104,6 @@ app.get('/api/beacon/chainhead', cors(corsOptions),
  * loading it from Heroku at ../client/build/index.html.
  * Do not serve static files when redirecting to IPFS hash.
  */
-const BUILD_IPFS_SUBDIRECTORY = 'ipfs';
 const isIpfs = process.env.IPFS === 'true';
 if (!isIpfs) {
   app.use(express.static(path.join(__dirname, '../client/build')));

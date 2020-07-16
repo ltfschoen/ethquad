@@ -6,7 +6,7 @@ const {
   INFURA_PROJECT_ID,
   INFURA_PROJECT_SECRET,
   INFURA_ENDPOINT_ETH2
-} = require('../constants');
+} = require('../../constants');
 
 const getChainHead = async (req, res, next) => {
   try {
