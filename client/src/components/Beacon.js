@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactJson from 'react-json-view';
 import { Alert, Container, Col, Row, Spinner } from "react-bootstrap";
+import { ETHQUAD_HOSTNAME_API } from '../constants';
 
 class Beacon extends Component {
   state = {
@@ -14,7 +15,7 @@ class Beacon extends Component {
 
     // Request from EthQuad API hosted on Heroku in production
     let hostname = process.env.NODE_ENV === 'production'
-      ? process.env.REACT_APP_ETHQUAD_HOSTNAME_API
+      ? ETHQUAD_HOSTNAME_API
       : 'http://localhost:5000/';
     const url = new URL(`${hostname}api/beacon/chainhead`);
     // const params = { key: 'value' };

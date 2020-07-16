@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import * as System from 'slate-react-system';
 import { createPow } from "@textile/powergate-client";
 import { Alert, Button, Container, Col, Row, Spinner } from "react-bootstrap";
+import pkg from '../../package.json';
+import { ETHQUAD_HOSTNAME_API } from './constants';
 import { toHexString } from './helpers';
 import { Greeter } from './components/Greeter';
 import Beacon from './components/Beacon';
-import pkg from '../../package.json';
 import './App.css';
 
 class App extends Component {
@@ -135,7 +136,7 @@ class App extends Component {
 
     // Request from EthQuad API hosted on Heroku in production
     let hostname = process.env.NODE_ENV === 'production'
-      ? process.env.REACT_APP_ETHQUAD_HOSTNAME_API
+      ? ETHQUAD_HOSTNAME_API
       : 'http://localhost:5000/';
     const url = new URL(`${hostname}api/getWebsiteIPFSHash`);
 
