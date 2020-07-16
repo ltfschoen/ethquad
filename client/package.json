@@ -22,6 +22,7 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
+    "react-json-view": "^1.19.1",
     "react-scripts": "3.4.1",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",

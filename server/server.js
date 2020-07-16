@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+const beaconMiddleware = require('./middleware/beaconMiddleware.js');
 const { connectToPinata } = require('../helpers/connectToPinata');
 
 const app = express();
@@ -72,6 +73,26 @@ app.get('/api/getWebsiteIPFSHash', cors(corsOptions),
       }
     } else {
       throw {status: 500, message: 'Unable to obtain Pinata Pin List'};
+    }
+  }
+);
+
+app.get('/api/beacon/chainhead', cors(corsOptions),
+  // Middleware chain
+  async (req, res, next) => {
+    console.log('Getting Beacon Chain Head');
+    await beaconMiddleware.getChainHead(req, res, next);
+  },
+  async (req, res, next) => {
+    // Handle error in async function
+    try {
+      const chainHead = res.locals.chainHead;
+      res.send({
+        chainHead,
+      });
+    } catch (error) {
+      console.error(error);
+      return;
     }
   }
 );
