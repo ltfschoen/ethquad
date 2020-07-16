@@ -20,8 +20,8 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
   * [X] Request decentralised domain name from Unstoppable Domains (https://ethquad.crypto)
   * [X] Deployment script generate a new Pin and Unpins all previous (./scripts/pinataUploadIpfs.js)
   * [X] Preview using Official IPFS Gateway (i.e. https://ipfs.io/ipfs/<IPFS_HASH>) in development environment (`yarn dev:ipfs:preview`)
-  * [ ] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
-    * Pending assistance from Slack group #hfs-sponsor-unstoppable-team https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594788644226200
+  * [X] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
+    * Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700
 * [ ] Backend Express.js API connection to Infura Eth 2.0 Endpoint (https://altona.infura.io)
 
 ### Optional
