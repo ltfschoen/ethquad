@@ -56,7 +56,7 @@ class App extends Component {
     const { token } = this.state;
     let FFS;
     try {
-      this.PowerGate = createPow({ host: 'http://0.0.0.0:6002' });
+      this.PowerGate = createPow({ host: 'https://0.0.0.0:6002' });
       FFS = await this.PowerGate.ffs.create();
     } catch(error) {
       console.error("Unable to connect to Powergate network");

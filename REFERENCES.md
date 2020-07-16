@@ -26,6 +26,7 @@
   * https://viewblock.io/unstoppable/
 
 * Other HackFS Projects
+  * https://hack.ethglobal.co/hackfs/showcase
   * https://github.com/Aimeedeer/bigannouncement
 
 * Other
