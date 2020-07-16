@@ -4,13 +4,14 @@ import { createPow } from "@textile/powergate-client";
 import { Alert, Button, Container, Col, Row, Spinner } from "react-bootstrap";
 import { toHexString } from './helpers';
 import { Greeter } from './components/Greeter';
+import Beacon from './components/Beacon';
+import pkg from '../../package.json';
 import './App.css';
 
 class App extends Component {
   PowerGate = null;
 
   state = {
-    hostnameAPIEthQuad: 'https://ethquad.herokuapp.com/',
     info: null,
     isLoading: false,
     // State keys to store in localStorage
@@ -20,7 +21,7 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
-    console.log('componentDidMount');
+    console.log(`EthQuad v${pkg.version}`);
     this.setState({ isLoading: true }, 
       async () => {
         await this.hydrateStateWithLocalStorage();
@@ -130,13 +131,12 @@ class App extends Component {
   }
 
   getWebsiteIPFSHash = async () => {
-    const { hostnameAPIEthQuad } = this.state;
     console.log('getWebsiteIPFSHash');
 
     // Request from EthQuad API hosted on Heroku in production
     let hostname = process.env.NODE_ENV === 'production'
-      ? hostnameAPIEthQuad
-      : window.location.href;
+      ? process.env.REACT_APP_ETHQUAD_HOSTNAME_API
+      : 'http://localhost:5000/';
     const url = new URL(`${hostname}api/getWebsiteIPFSHash`);
 
     this.setState({ isLoading: true });
@@ -329,6 +329,7 @@ class App extends Component {
             />
           </Col>
         </Row>
+        <Beacon />
       </Container>
     );
   }
