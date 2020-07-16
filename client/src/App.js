@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as System from 'slate-react-system';
 import { createPow } from "@textile/powergate-client";
-import { Alert, Container, Col, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, Container, Col, Row, Spinner } from "react-bootstrap";
+import { toHexString } from './helpers';
 import { Greeter } from './components/Greeter';
 import './App.css';
 
@@ -177,8 +178,98 @@ class App extends Component {
     }
   }
 
-  handleCreateFilecoinStorageDeal = () => {
+  // Store Website IPFS Hash on Filecoin
+  // Reference: https://github.com/filecoin-project/slate/blob/main/pages/experiences/make-storage-deal.js
+  handleCreateFilecoinStorageDeal = async () => {
+    const { websiteIPFSHash } = this.state;
     console.log('handleCreateFilecoinStorageDeal');
+    // FIXME - how to check if any cid's exist in FFS without having to use a
+    // try/catch block so it doesn't crash with error
+    // `Uncaught (in promise) Error: stored item not found` if no items exist?
+    let showAll;
+    try {
+      // List cid infos for all data stored in the current FFS instance
+      showAll = await this.PowerGate.ffs.showAll();
+      console.log('Show all cid info');
+      console.log('showAll: ', showAll);
+    } catch (error) {
+      // Store item may not have been found
+      console.error('showAll error: ', error);
+      console.log('Show all cid info failed store item not found');
+    }
+
+    // FIXME - how to check if a specific cid exists in FFS without having to use a
+    // try/catch block so it doesn't crash with error if we try to remove it 
+    // `Uncaught (in promise) Error: stored item not found` but when it doesn't exist?
+    // Note that if we try using `ffs.get(cid)` and it doesn't exist then it also
+    // crashes with that same error, so we need to use a try/catch block with that too.
+    try {
+      // Remove existing cid (if any) for the Website IPFS Hash from FFS storage
+      const removed = await this.PowerGate.ffs.remove(websiteIPFSHash);
+      console.log('removed', removed);
+    } catch (error) {
+      // Store item may not have been found
+      console.error('remove error: ', error);
+      console.log('Remove cid failed since it does not exist');
+    }
+
+    try {
+      // Cache data in IPFS in preparation for storing data in FFS by calling pushConfig
+      // e.g. cid: QmQbdEo1K15gHCrPz4jcLuL7hDLy5mJeFKE6mmKXXeUth4
+      const { cid } = await this.PowerGate.ffs.addToHot(websiteIPFSHash);
+      console.log('Cached cid data in IPFS in preparation for storing data in FFS');
+      console.log('cid: ', cid);
+
+      // FIXME - how to use FFS to check if a cid already exists before running
+      // `ffs.pushConfig(cid)` without it crashing when we call `ffs.get(cid)`
+      // but it doesn't exist (e.g. why not add a new FFS function `isCid`?)
+      // It appears to be necessary to do this, otherwise if you try to call
+      // `ffs.pushConfig(cid)` when the cid already exists, it crashes with
+      // error `cid may have already been pinned, consider using override flag`
+      // but where do we find out how to use the override flag?
+
+      // Push a storage config for the specified cid
+      const { jobId } = await this.PowerGate.ffs.pushConfig(cid);
+      console.log('Pushing cached cid data from IPFS to FFS');
+      console.log('jobId: ', jobId);
+
+      const cancel = this.PowerGate.ffs.watchJobs((job) => {
+        console.log('Job update: ', job);
+
+        // FIXME - Save cid to state when get confirmation it is stored in FFS.
+        // Buth how do we detect when it's been successfully stored to FFS Storage?
+
+        // this.setState({
+        //   cid,
+        //   cidDataHexStr
+        // });
+      }, jobId);
+      console.log('cancel: ', cancel);
+
+      // FIXME - cidData (e.g. `42650d43746dd706dd531ca7bc36dacb0c4c0cc7ab6d69d9019299aa71c1f70156d7`)
+      // does not match the cid value (e.g. the Website IPFS Address of
+      // `QmUNQ3Rt1wbdUxynvDbaywxMDMerbWnZAZKZqnHB9wFW15`)
+
+      // Show the data stored for the current cid
+      const cidData = await this.PowerGate.ffs.get(cid);
+      const cidDataHexStr = toHexString(cidData);
+      console.log('Retrieved cached cid data from IPFS');
+      console.log('cidData: ', cidDataHexStr);
+    } catch (error) {
+      console.error('error: ', error);
+    }
+
+    // FIXME - showAll is empty array even though cid has been created in cache using addToHot 
+    try {
+      // List cid infos for all data stored in the current FFS instance
+      showAll = await this.PowerGate.ffs.showAll();
+      console.log('Show all cid info');
+      console.log('showAll: ', showAll);
+    } catch (error) {
+      // Store item may not have been found
+      console.error('showAll error: ', error);
+      console.log('Show all cid info failed store item not found');
+    }
   }
 
   render() {
@@ -211,6 +302,20 @@ class App extends Component {
             }
           </Col>
         </Row>
+        { websiteIPFSHash ? (
+            <Row className="justify-content-md-center">
+              <Col xs={12} md={12}>
+                <Button
+                  size='lg'
+                  style={{backgroundColor: '#2935ff', fontSize: '0.75rem'}}
+                  onClick={this.handleCreateFilecoinStorageDeal}
+                >
+                  Save Website IPFS Hash to Filecoin Storage
+                </Button>
+              </Col>
+            </Row>
+          ) : null
+        }
         <Row className="justify-content-md-center">
           <Col xs={12} md={12}>
             { info ? (
@@ -221,13 +326,6 @@ class App extends Component {
             }
             <System.CreateFilecoinAddress
               onSubmit={this.handleCreateAddress}
-            />
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col xs={12} md={12}>
-            <System.CreateFilecoinStorageDeal
-              onSubmit={this.handleCreateFilecoinStorageDeal}
             />
           </Col>
         </Row>

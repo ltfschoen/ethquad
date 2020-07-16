@@ -15,13 +15,17 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
   * [X] Create and view multiple Filecoin Addresses and associate them with PowerGate token.
   * [X] Retrieve Pin (IPFS Hash where front-end deployed) from PinList using Express.js API endpoint that connects to Pinata (http://ethquad.herokuapp.com/api/getWebsiteIPFSHash)
   * [X] Display latest Pin (Website IPFS Hash) in front-end
-  * [ ] Modify the Slate's "Make a Storage Deal" code to deploy that latest Pin to Filecoin Testnet (not just Local)
+  * [ ] Modify the Slate's "Make a Storage Deal" code to deploy that latest Pin to Lotus Filecoin Testnet (not just Local)
+    * [ ] Pending resolution of issues:
+      * https://github.com/filecoin-project/slate/issues/71
+      * https://github.com/textileio/powergate/issues/521
+      * https://github.com/ltfschoen/ethquad/pull/7
 * [X] Frontend deployed to IPFS Address using Pinata SDK
   * [X] Request decentralised domain name from Unstoppable Domains (https://ethquad.crypto)
   * [X] Deployment script generate a new Pin and Unpins all previous (./scripts/pinataUploadIpfs.js)
   * [X] Preview using Official IPFS Gateway (i.e. https://ipfs.io/ipfs/<IPFS_HASH>) in development environment (`yarn dev:ipfs:preview`)
-  * [ ] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
-    * Pending assistance from Slack group #hfs-sponsor-unstoppable-team https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594788644226200
+  * [X] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
+    * Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700
 * [ ] Backend Express.js API connection to Infura Eth 2.0 Endpoint (https://altona.infura.io)
 
 ### Optional
