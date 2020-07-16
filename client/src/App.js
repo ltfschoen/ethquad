@@ -9,6 +9,7 @@ class App extends Component {
   PowerGate = null;
 
   state = {
+    hostnameAPIEthQuad: 'https://ethquad.herokuapp.com/',
     info: null,
     isLoading: false,
     // State keys to store in localStorage
@@ -128,9 +129,14 @@ class App extends Component {
   }
 
   getWebsiteIPFSHash = async () => {
+    const { hostnameAPIEthQuad } = this.state;
     console.log('getWebsiteIPFSHash');
 
-    const url = new URL(`${window.location.href}api/getWebsiteIPFSHash`);
+    // Request from EthQuad API hosted on Heroku in production
+    let hostname = process.env.NODE_ENV === 'production'
+      ? hostnameAPIEthQuad
+      : window.location.href;
+    const url = new URL(`${hostname}api/getWebsiteIPFSHash`);
 
     this.setState({ isLoading: true });
     const response = await fetch(url, {
@@ -182,9 +188,12 @@ class App extends Component {
         <Row className="justify-content-md-center">
           <Col>
             <Greeter name='EthQuad'/>
-            <Alert variant="info">
-              Website IPFS Hash: { websiteIPFSHash }
-            </Alert>
+            { websiteIPFSHash ? (
+                <Alert variant="info">
+                  Website IPFS Hash: { websiteIPFSHash }
+                </Alert>
+              ) : null
+            }
             { token ? (
                 <Row className="justify-content-md-center">
                   <Col xs={12} md={12}>
