@@ -12,6 +12,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsWhitelist = [
+  'http://localhost:3000',
   'http://localhost:5000',
   'https://ipfs.io'
 ];
