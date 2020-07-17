@@ -6,7 +6,8 @@ import dotProp from 'dot-prop';
  *
  * Uses setState to capture the response, so your component
  * will re-render when the result turns up.
- *
+ * 
+ * Reference: https://github.com/ipfs/js-ipfs/tree/master/examples/browser-create-react-app
  */
 export default function useIpfs (ipfs, cmd, opts) {
   const [res, setRes] = useState(null)

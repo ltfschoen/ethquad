@@ -4,14 +4,9 @@ import { useEffect, useState } from 'react'
 let ipfs = null
 
 /*
- * A quick demo using React hooks to create an ipfs instance.
+ * Create an IPFS instance using React Hooks.
  *
- * Hooks are brand new at the time of writing, and this pattern
- * is intended to show it is possible. I don't know if it is wise.
- *
- * Next steps would be to store the ipfs instance on the context
- * so use-ipfs calls can grab it from there rather than expecting
- * it to be passed in.
+ * Reference: https://github.com/ipfs/js-ipfs/tree/master/examples/browser-create-react-app
  */
 export default function useIpfsFactory () {
   const [isIpfsReady, setIpfsReady] = useState(Boolean(ipfs))

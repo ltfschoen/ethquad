@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alert, Container, Col, Row, Spinner } from "react-bootstrap";
-// import { JsIpfs } from 'js-ipfs';
 import useIpfsFactory from '../hooks/useIpfsFactory';
 import useIpfs from '../hooks/useIpfs';
 
