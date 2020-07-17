@@ -26,7 +26,7 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
   * [X] Separate IPFS Address Pin for deployed frontend depending on environment (development or proudction). Used Pinata metadata to identify associated environment.
   * [X] Preview using Official IPFS Gateway (i.e. https://ipfs.io/ipfs/<IPFS_HASH>) in development environment (`yarn dev:ipfs:preview`)
   * [X] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
-    * Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700
+    * [ ] Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700
 * [X] Backend Express.js API connection to Infura Eth 2.0 Endpoint (https://altona.infura.io)
 
 ### Optional
@@ -80,6 +80,7 @@ yarn dev:ipfs:preview
 
 * Go to http://localhost:5000
   * Important note: Use port 5000 since only running from server instead of client with proxy.
+  * Important: If the UI doesn't load, try running with `yarn dev` instead, since it may be caused by React.js that aren't being shown. 
 
 # Deployment (IPFS & Heroku)
 

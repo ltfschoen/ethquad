@@ -306,7 +306,10 @@ class App extends Component {
                   }
                 </Col>
                 <Col sm={12} md={5}>
-                  <Ipfs />
+                  { websiteIPFSHash
+                      ? <Ipfs cid={websiteIPFSHash} />
+                      : null
+                  }
                 </Col>
               </Row>
               { websiteIPFSHash ? (

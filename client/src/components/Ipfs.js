@@ -4,9 +4,19 @@ import useIpfsFactory from '../hooks/useIpfsFactory';
 import useIpfs from '../hooks/useIpfs';
 
 // https://github.com/ipfs/js-ipfs/tree/master/examples/browser-create-react-app
-const Ipfs = () => {
+const Ipfs = (props) => {
+  const { cid } = props;
+  console.log('Ipfs props: ', props);
   const { ipfs, ipfsInitError } = useIpfsFactory({ commands: ['id'] });
+  console.log('ipfs: ', ipfs);
   const id = useIpfs(ipfs, 'id');
+  // // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfslsipfspath
+  const files = useIpfs(ipfs, 'ls', cid);
+  console.log('files: ', JSON.stringify(files));
+
+  // for await (const file of files) {
+  //   console.log(file.path);
+  // }
 
   return (
     <Container fluid>
