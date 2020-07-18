@@ -83,7 +83,7 @@ yarn dev:ipfs:preview
 
 * Go to http://localhost:5000
   * Important note: Use port 5000 since only running from server instead of client with proxy.
-  * Important: If the UI doesn't load, try running with `yarn dev` instead, since it may be caused by React.js that aren't being shown. 
+  * Important: If the UI doesn't load, try running with `yarn dev` instead, since it may be caused by React.js that aren't being shown.
 
 # Deployment (IPFS & Heroku)
 
