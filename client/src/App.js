@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import * as System from 'slate-react-system';
 import { createPow } from "@textile/powergate-client";
 import { Alert, Button, Container, Col, Row, Spinner } from "react-bootstrap";
-import pkg from '../../package.json';
 import { ETHQUAD_HOSTNAME_API } from './constants';
 import { toHexString } from './helpers';
 import { Greeter } from './components/Greeter';
 import Beacon from './components/Beacon';
+import Ipfs from './components/Ipfs';
 import './App.css';
 
 class App extends Component {
@@ -22,7 +22,7 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
-    console.log(`EthQuad v${pkg.version}`);
+    console.log(`EthQuad`);
     this.setState({ isLoading: true }, 
       async () => {
         await this.hydrateStateWithLocalStorage();
@@ -277,60 +277,74 @@ class App extends Component {
     const { info, isLoading, token, websiteIPFSHash } = this.state;
     return (
       <Container fluid className="App">
-        <Row className="justify-content-md-center">
-          <Col>
-            <Greeter name='EthQuad'/>
-            { websiteIPFSHash ? (
-                <Alert variant="info">
-                  Website IPFS Hash: { websiteIPFSHash }
-                </Alert>
-              ) : null
-            }
-            { token ? (
-                <Row className="justify-content-md-center">
-                  <Col xs={12} md={12}>
-                    <Alert variant="info">
-                      Token: { token }
-                    </Alert>
-                  </Col>
-                </Row>
-              ) : null
-            }
-            {
-              isLoading ? (
-                <Spinner animation="border" variant="primary" />
-              ) : null
-            }
+        <Row>
+          <Col sm={12} md={9}>
+            <Container>
+              <Row className="justify-content-md-center">
+                <Col sm={12} md={4}>
+                  <Greeter name='EthQuad'/>
+                  { websiteIPFSHash ? (
+                      <Alert variant="info">
+                        Website IPFS Hash: { websiteIPFSHash }
+                      </Alert>
+                    ) : null
+                  }
+                  { token ? (
+                      <Row className="justify-content-md-center">
+                        <Col sm={12} md={12}>
+                          <Alert variant="info">
+                            Token: { token }
+                          </Alert>
+                        </Col>
+                      </Row>
+                    ) : null
+                  }
+                  {
+                    isLoading ? (
+                      <Spinner animation="border" variant="primary" />
+                    ) : null
+                  }
+                </Col>
+                <Col sm={12} md={5}>
+                  { websiteIPFSHash
+                      ? <Ipfs cid={websiteIPFSHash} />
+                      : null
+                  }
+                </Col>
+              </Row>
+              { websiteIPFSHash ? (
+                  <Row className="justify-content-md-center">
+                    <Col sm={12} md={12}>
+                      <Button
+                        size='lg'
+                        style={{backgroundColor: '#2935ff', fontSize: '0.75rem'}}
+                        onClick={this.handleCreateFilecoinStorageDeal}
+                      >
+                        Save Website IPFS Hash to Filecoin Storage
+                      </Button>
+                    </Col>
+                  </Row>
+                ) : null
+              }
+              <Row className="justify-content-md-center">
+                <Col sm={8} md={8}>
+                  { info ? (
+                      <System.FilecoinBalancesList
+                        data={info.balancesList}
+                      />
+                    ) : null
+                  }
+                  <System.CreateFilecoinAddress
+                    onSubmit={this.handleCreateAddress}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+          <Col sm={12} md={3}>
+            <Beacon />
           </Col>
         </Row>
-        { websiteIPFSHash ? (
-            <Row className="justify-content-md-center">
-              <Col xs={12} md={12}>
-                <Button
-                  size='lg'
-                  style={{backgroundColor: '#2935ff', fontSize: '0.75rem'}}
-                  onClick={this.handleCreateFilecoinStorageDeal}
-                >
-                  Save Website IPFS Hash to Filecoin Storage
-                </Button>
-              </Col>
-            </Row>
-          ) : null
-        }
-        <Row className="justify-content-md-center">
-          <Col xs={12} md={12}>
-            { info ? (
-                <System.FilecoinBalancesList
-                  data={info.balancesList}
-                />
-              ) : null
-            }
-            <System.CreateFilecoinAddress
-              onSubmit={this.handleCreateAddress}
-            />
-          </Col>
-        </Row>
-        <Beacon />
       </Container>
     );
   }

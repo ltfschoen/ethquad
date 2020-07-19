@@ -20,6 +20,9 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
       * https://github.com/filecoin-project/slate/issues/71
       * https://github.com/textileio/powergate/issues/521
       * https://github.com/ltfschoen/ethquad/pull/7
+* [X] Frontend connects to IPFS using js-ipfs
+  * [ ] Retrieve IPFS hash data using js-ipfs
+    * Pending issue https://github.com/ipfs/js-ipfs/issues/3179
 * [X] Frontend deployed to IPFS Address using Pinata SDK
   * [X] Request decentralised domain name from Unstoppable Domains (https://ethquad.crypto)
   * [X] Deployment script generate a new Pin and Unpins all previous (./scripts/pinataUploadIpfs.js)
