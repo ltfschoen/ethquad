@@ -67,18 +67,23 @@ const main = async () => {
   const ethAddress = await resolveDomain(resolution, domainInfo.address, domainInfo.currency);
 
   // Update domain records of the Resolver Contract in the registry for the domain
+  if (process.argv.includes('--setRedirectIpfs')) {
+    // If the user runs this script with flag `node ./scripts/unstoppableDomainsRedirect.js --setRedirectIpfs`
+    const newIPFSRedirectionHash = '';
+    const response = await ResolverContractInstance.methods
+      .set('ipfs.html.value', newIPFSRedirectionHash, tokenId)
+      .send({
+        from: coinbaseAddress
+      });
+    console.log('Updated record of IPFS redirection hash for domain name: ', response);
+  }
 
-  // const newIPFSRedirectionHash = '';
-  // const response = await ResolverContractInstance.methods
-  //   .set('ipfs.html.value', newIPFSRedirectionHash, tokenId)
-  //   .send({
-  //     from: coinbaseAddress
-  //   });
-  // console.log('Updated record of IPFS redirection hash for domain name: ', response);
-
-  // const newTraditionalDomainRedirectionUrl = 'https://ethquad.herokuapp.com';
-  // const response = await ResolverContractInstance.methods.set('ipfs.redirect_domain.value', newTraditionalDomainRedirectionUrl, tokenId).send();
-  // console.log('Updated record of Traditional Domain Redirection URL for domain name: ', response);
+  if (process.argv.includes('--setRedirectTraditionalDomain')) {
+    // If the user runs this script with flag `node ./scripts/unstoppableDomainsRedirect.js --setRedirectTraditionalDomain`
+    const newTraditionalDomainRedirectionUrl = 'https://ethquad.herokuapp.com';
+    const response = await ResolverContractInstance.methods.set('ipfs.redirect_domain.value', newTraditionalDomainRedirectionUrl, tokenId).send();
+    console.log('Updated record of Traditional Domain Redirection URL for domain name: ', response);
+  }
 }
 
 main()

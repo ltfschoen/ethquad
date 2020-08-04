@@ -8,25 +8,11 @@
 require('dotenv').config()
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execute } = require('../helpers/execute');
 const { connectToPinata } = require('../server/helpers/connectToPinata');
-const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
-const { findPinsForEnv } = require('../helpers/pinataFindPinsForEnv');
+const { BUILD_IPFS_SUBDIRECTORY, IPFS_GATEWAY, IS_PROD } = require('../constants');
+const { findPinsForEnv } = require('../helpers/pinataFindPins');
 
-/**
- * Duplicate of https://github.com/polkadot-js/dev/blob/master/packages/dev/scripts/execSync.js
- */
-function execute(cmd, noLog) {
-  !noLog && console.log(`$ ${cmd}`);
-
-  try {
-    execSync(cmd, { stdio: 'inherit' });
-  } catch (error) {
-    process.exit(-1);
-  }
-};
-
-const GATEWAY = 'https://ipfs.io/ipfs/';
 const PATH_SOURCE_CODE = path.join(__dirname, '..', 'client', 'build');
 const WOPTS = { encoding: 'utf8', flag: 'w' };
 const REPO = `git@github.com:ltfschoen/ethquad.git`;
@@ -50,9 +36,11 @@ function updateGithub(hash) {
 
 /**
  * Build front-end into client/build directory using Webpack
- * Users to visit https://ethquad.crypto shall be directed to the build front-end hosted on IPFS.
- * Alternatively users that visit https://ethquad.herokuapp.com use the centralised front-end hosted on Heroku,
- * which also serves as the EthQuad server-side API.
+ * Users that visit https://ethquad.crypto shall be directed to page that is hosted on IPFS that redirects them
+ * to the traditional domain https://ethquad.herokuapp.com (see pinataUploadIpfsTraditional.js),
+ * which in turn redirects them to the front-end that is hosted at another IPFS hash.
+ * Visiting https://ethquad.herokuapp.com directly is only for using the centralised EthQuad server-side API
+ * hosted on Heroku.
  */
 async function pin() {
   execute(`mkdir -p ${PATH_IPFS}`);
@@ -61,7 +49,8 @@ async function pin() {
       // Store frontend at different IPFS location in development and production
       name: IS_PROD ? 'EthQuad-prod' : 'EthQuad-dev',
       keyvalues: {
-        env: IS_PROD ? 'production' : 'development'
+        env: IS_PROD ? 'production' : 'development',
+        traditional: 'false'
       }
     },
     pinataOptions: {
@@ -71,7 +60,7 @@ async function pin() {
   console.log('Generating Pin...');
   const result = await pinata.pinFromFS(PATH_SOURCE_CODE, options);
   console.log('Generated Pin with IPFS hash: ', result);
-  const url = `${GATEWAY}${result.IpfsHash}/build/`;
+  const url = `${IPFS_GATEWAY}${result.IpfsHash}/build/`;
   const html = `<!DOCTYPE html>
 <html>
   <head>
@@ -133,7 +122,7 @@ async function main() {
   pinata = await connectToPinata();
   if (pinata) {
     const hash = await pin();
-    await unpin(hash);  
+    await unpin(hash);
   }
 }
 

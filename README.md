@@ -25,8 +25,9 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
   * [X] Deployment script generate a new Pin and Unpins all previous (./scripts/pinataUploadIpfs.js)
   * [X] Separate IPFS Address Pin for deployed frontend depending on environment (development or proudction). Used Pinata metadata to identify associated environment.
   * [X] Preview using Official IPFS Gateway (i.e. https://ipfs.io/ipfs/<IPFS_HASH>) in development environment (`yarn dev:ipfs:preview`)
-  * [X] Configure domain name to redirect to Heroku (where it further redirects to the IPFS hash)
-    * [ ] Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700
+  * [X] Configure ethquad.crypto domain name to redirect to an IPFS Hash (which just redirects to Heroku at ethquad.herokuapp.com), and configure ethquad.herokuapp.com to further redirects to the IPFS hash where the front-end of the website is stored.
+    * [X] Temporary workaround since 'Redirect to Traditional Domain' is not working yet (as advised by Magomet Tsanajev from Unstoppable Domains). See https://community.unstoppabledomains.com/t/redirect-blockchain-domains/621
+    * [ ] Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700. Note that this requires Unstoppable Domains to get the 'Redirect to Traditional Domain' functionality working
 * [X] Backend Express.js API connection to Infura Eth 2.0 Endpoint (https://altona.infura.io)
 
 ### Optional
@@ -42,7 +43,7 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
 
 * Go to https://ethquad.herokuapp.com.
 
-Note: Access to https://ethquad.crypto is in progress
+Note: Access to https://ethquad.crypto is in progress pending resolution to an IPFS Hash to direct it
 
 # Development
 
@@ -82,7 +83,29 @@ yarn dev:ipfs:preview
   * Important note: Use port 5000 since only running from server instead of client with proxy.
   * Important: If the UI doesn't load, try running with `yarn dev` instead, since it may be caused by React.js that aren't being shown.
 
+### View information about the ethquad.crypto domain name (provided by [Unstoppable Domains](https://unstoppabledomains.com/r/ce60aaca281f4ce))
+
+```
+node ./scripts/unstoppableDomainsRedirect.js
+```
+
 # Deployment (IPFS & Heroku)
+
+Generate an IPFS Hash (for redirecting the ethquad.crypto domain name to a traditional domain). Repeat this in future if the traditional domain name (i.e. ethquad.herokuapp.com) changes.
+
+Verify that the IPFS Hash has been created with name 'EthQuad-prod-traditional' at https://pinata.cloud/pinexplorer
+
+Go to https://unstoppabledomains.com/manage and change the IPFS Hash value the new IPFS Hash that is output to the terminal. Check for when the .crypto domain name resolves to the new IPFS Hash by running `node ./scripts/unstoppableDomainsRedirect.js` (without any flags). It will redirect when a value is output for `Read record of IPFS redirection hash:`.
+
+Alternatively try setting the IPFS Hash programmatically by running `node ./scripts/unstoppableDomainsRedirect.js --setRedirectIpfs`. However, this approach would require you to add the following to your .env file:
+* `ETHEREUM_ADDRESS` that owns the .crypto domain name
+* `MNEMONIC` phrase associate with the above Ethereum address
+* `INFURA_PROJECT_ID` and `INFURA_PROJECT_SECRET` to connect to Ethereum Mainnet using Infura
+Note that running `node ./scripts/unstoppableDomainsRedirect.js --setRedirectTraditionalDomain` to redirect the .crypto address to a Traditional Domain like https://ethquad.herokuapp.com directly is not currently supported by Unstoppable Domains.
+
+```
+yarn run build:release:ipfs-traditional-domain
+```
 
 Push changes to IPFS & Heroku
 ```

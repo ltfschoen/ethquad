@@ -20,6 +20,7 @@
     "build:tsc": "./node_modules/typescript/bin/tsc --project tsconfig.json",
     "build:dev:ipfs": "cross-env NODE_ENV=development node scripts/pinataUploadIpfs.js",
     "build:release:ipfs": "cross-env NODE_ENV=production node scripts/pinataUploadIpfs.js",
+    "build:release:ipfs-traditional-domain": "cross-env node scripts/pinataUploadIpfsTraditional.js",
     "heroku-postbuild": "yarn build:release",
     "build:release": "cross-env NODE_ENV=production yarn setup:deps && yarn build:tsc && yarn build:release:webpack && yarn build:release:ipfs",
     "build:dev:webpack": "cd client && ./node_modules/.bin/webpack --mode development --config ./webpack.config.js && cd ../",
