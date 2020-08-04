@@ -28,7 +28,7 @@
   "dependencies": {
     "@pinata/sdk": "^1.1.10",
     "@truffle/hdwallet-provider": "^1.0.38",
-    "@unstoppabledomains/resolution": "^1.5.2-beta.0",
+    "@unstoppabledomains/resolution": "^1.6.0",
     "base-64": "^0.1.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

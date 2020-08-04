@@ -33,7 +33,7 @@ const main = async () => {
   RegistryContractInstance.setProvider(web3Provider);
 
   const resolution = new Resolution({blockchain: {
-    web3Provider: web3Provider,
+    provider: web3Provider,
     ens: {url: infuraHttpProviderUrl},
     cns: {url: infuraHttpProviderUrl}
   }});
@@ -63,6 +63,9 @@ const main = async () => {
   const ipfsRedirectionHash = await ResolverContractInstance.methods.get('ipfs.html.value', tokenId).call();
   console.log('Read record of IPFS redirection hash: ', ipfsRedirectionHash);
 
+  // Resolve address based on given domain info
+  const ethAddress = await resolveDomain(resolution, domainInfo.address, domainInfo.currency);
+
   // Update domain records of the Resolver Contract in the registry for the domain
 
   // const newIPFSRedirectionHash = '';
@@ -76,11 +79,6 @@ const main = async () => {
   // const newTraditionalDomainRedirectionUrl = 'https://ethquad.herokuapp.com';
   // const response = await ResolverContractInstance.methods.set('ipfs.redirect_domain.value', newTraditionalDomainRedirectionUrl, tokenId).send();
   // console.log('Updated record of Traditional Domain Redirection URL for domain name: ', response);
-
-  // FIXME - See issue https://github.com/unstoppabledomains/resolution/issues/73
-  // // Resolve address based on given domain info
-  // const ethAddress = await resolveDomain(resolution, domainInfo.address, domainInfo.currency);
-  // console.log('ethAddress:', ethAddress);
 }
 
 main()

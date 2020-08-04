@@ -320,10 +320,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.50.tgz#e9b2e85fafc15f2a8aa8fdd41091b983da5fd6ee"
   integrity sha512-5ImO01Fb8YsEOYpV+aeyGYztcYcjGsBvN4D7G5r1ef2cuQOpymjWNQi5V0rKHE6PC2ru3HkoUr/Br2/8GUA84w==
 
-"@unstoppabledomains/resolution@^1.5.2-beta.0":
-  version "1.5.2-beta.0"
-  resolved "https://registry.yarnpkg.com/@unstoppabledomains/resolution/-/resolution-1.5.2-beta.0.tgz#13976655f858cf80e08a32f0ec42da11d9b65add"
-  integrity sha512-6LybRv3Bml5T0OB/Jb4+kEWAfWrNoOyjYhV5nnvplXNwLdlp9BTt6+UFWEzT0CA0KcuCmwgZuKm+6YWsuBHkaw==
+"@unstoppabledomains/resolution@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@unstoppabledomains/resolution/-/resolution-1.6.0.tgz#4bfb096bec1a63ee3f1948560f443e68b50b3fad"
+  integrity sha512-nGPfg+apLE9drHFOcNWirc47wcBJx6DiKkoLa9so16QIPy+0UFSBylzCu7z/4DHODckt6yWEDgO77y7tZsA33g==
   dependencies:
     "@ensdomains/address-encoder" ">=0.1.6"
     "@ethersproject/abi" "^5.0.1"
