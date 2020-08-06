@@ -47,7 +47,7 @@ class Beacon extends Component {
   }
 
   render() {
-    const { chainHead, isLoading, response, responseMsg } = this.state;
+    const { isLoading, response, responseMsg } = this.state;
 
     return (
       <Container fluid>

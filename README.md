@@ -74,6 +74,7 @@ yarn global add concurrently;
 
 ## Develop website locally without deployment to IPFS
 
+* IMPORTANT: Wait until PowerGate is fully running before running this.
 ```
 yarn dev
 ```
@@ -121,13 +122,18 @@ git push heroku master
 
 Note: Heroku will build dependencies, then run the "heroku-postbuild" script in package.json. The "build:release:ipfs" script will deploy the front-end to an IPFS hash.
 
+Configure Heroku
+```
+heroku git:remote -a ethquad
+```
+
 Set Heroku Environment Variables to match the contents of the .env file. Replace missing values below:
 ```
 heroku config:set \
   KEY1=VALUE \
   KEY2=VALUE
 
-heroku config
+heroku config --app ethquad
 ```
 
 # Troubeshooting

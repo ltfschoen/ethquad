@@ -188,7 +188,7 @@ class App extends Component {
       new Promise((resolve) => {
         const reader = new FileReader();
         reader.onloadend = function (e) {
-          if (e.target.readyState == FileReader.DONE) {
+          if (e.target.readyState === FileReader.DONE) {
             buffer = new Uint8Array(e.target.result);
           }
           resolve();
@@ -201,7 +201,7 @@ class App extends Component {
     console.log('Creating Filecoin storage deal for file with cid: ', cid);
     const { jobId } = await this.PowerGate.ffs.pushStorageConfig(cid);
     console.log('Creating Filecoin storage deal for file with jobId: ', jobId);
-    const cancel = this.PowerGate.ffs.watchJobs((job) => {
+    this.PowerGate.ffs.watchJobs((job) => {
       console.log('Job log: ', job);
     }, jobId);
   }
