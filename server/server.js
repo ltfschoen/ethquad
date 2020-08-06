@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const { BUILD_IPFS_SUBDIRECTORY, IS_PROD } = require('../constants');
-const { findPinsForEnv } = require('../helpers/pinataFindPinsForEnv');
+const { findPinsForEnv } = require('../helpers/pinataFindPins');
 const beaconMiddleware = require('./middleware/beaconMiddleware.js');
 const { connectToPinata } = require('./helpers/connectToPinata');
 const app = express();
@@ -13,6 +13,7 @@ const port = process.env.PORT || 5000;
 
 const corsWhitelist = [
   'http://localhost:3000',
+  'http://localhost:4000',
   'http://localhost:5000',
   'https://ipfs.io'
 ];
@@ -22,7 +23,7 @@ const corsOptions = {
   'exposedHeaders': ['Content-Type','Authorization','Origin','Accept'],
   'origin': function (origin, callback) {
     // Do not want to block REST tools or server-to-server requests
-    // when running with `yarn dev` on localhost:3000
+    // when running with `yarn dev` on localhost:4000
     if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true)
     } else {
@@ -47,7 +48,7 @@ app.use((err, req, res, next) => {
 });
 
 /**
- * Example: http://localhost:3000/api/endpoint?query=<PARAMETER>
+ * Example: http://localhost:4000/api/endpoint?query=<PARAMETER>
  * http://localhost:5000/api/getWebsiteIPFSHash
  */
 app.get('/api/getWebsiteIPFSHash', cors(corsOptions),

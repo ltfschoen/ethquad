@@ -2462,10 +2462,10 @@
   resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web-node-http-transport/-/grpc-web-node-http-transport-0.12.0.tgz#827138160d2f945620e103473042025529c00c8e"
   integrity sha512-+Kjz+Dktfz5LKTZA9ZW/Vlww6HF9KaKz4x2mVe1O8CJdOP2WfzC+KY8L6EWMqVLrV4MvdBuQdSgDmvSJz+OGuA==
 
-"@improbable-eng/grpc-web@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.12.0.tgz#9b10a7edf2a1d7672f8997e34a60e7b70e49738f"
-  integrity sha512-uJjgMPngreRTYPBuo6gswMj1gK39Wbqre/RgE0XnSDXJRg6ST7ZhuS53dFE6Vc2CX4jxgl+cO+0B3op8LA4Q0Q==
+"@improbable-eng/grpc-web@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.13.0.tgz#289e6fc4dafc00b1af8e2b93b970e6892299014d"
+  integrity sha512-vaxxT+Qwb7GPqDQrBV4vAAfH0HywgOLw6xGIKXd9Q8hcV63CQhmS3p4+pZ9/wVvt4Ph3ZDK9fdC983b9aGMUFg==
   dependencies:
     browser-headers "^0.4.0"
 
@@ -2846,22 +2846,22 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-7.2.1.tgz#2ad4e844175a3738cb9e7064be5ea070b8863a1c"
   integrity sha512-oZ0Ib5I4Z2pUEcoo95cT1cr6slco9WY7yiPpG+RGNkj8YcYgJnM7pXmYmorNOReh8MIGcKSqXyeGjxnr8YiZbA==
 
-"@textile/grpc-powergate-client@0.0.1-beta.13":
-  version "0.0.1-beta.13"
-  resolved "https://registry.yarnpkg.com/@textile/grpc-powergate-client/-/grpc-powergate-client-0.0.1-beta.13.tgz#91a872b8c4c1e38c26f2f3a65167a9c8b60741d0"
-  integrity sha512-ACYEOokCWkev1sxbZcTGFCPaUDpk95cOHnmKDXdCA2hS+qYdI0SJYVZXCmVkLQf2WQB8P6Losi+tc7Iw3A42dg==
+"@textile/grpc-powergate-client@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@textile/grpc-powergate-client/-/grpc-powergate-client-0.2.0.tgz#2f3f6b9b2fcf23a8c012cf5cec9b60dce41d1160"
+  integrity sha512-h/AHAPVGQwL6QPoBCCAdqF+bbfRl6Q0eTw4a3mJnjD0F3ILG+zH8qjJ6dNOSPMOcEJjTGUzma0GqN/+nCvI00g==
   dependencies:
-    "@improbable-eng/grpc-web" "^0.12.0"
+    "@improbable-eng/grpc-web" "^0.13.0"
     "@types/google-protobuf" "^3.7.2"
     google-protobuf "^3.12.2"
 
-"@textile/powergate-client@^0.1.0-beta.14":
-  version "0.1.0-beta.14"
-  resolved "https://registry.yarnpkg.com/@textile/powergate-client/-/powergate-client-0.1.0-beta.14.tgz#6a5a6462dfdd2470aecac672bedeea1c82c726dd"
-  integrity sha512-pPj9ddHdJ8lSsMZbt285gdujPtBJoJyLSeAIw9FwM0D6tngvJ5d0YgF+oiFjZijMF44klRYrujAtuDzWLqMO8A==
+"@textile/powergate-client@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@textile/powergate-client/-/powergate-client-0.2.0.tgz#1edc6ee4b5cbc30d9e6f630124ecaec115f2b412"
+  integrity sha512-GTGzGKx4x4GZAXov9ccpCEogu8iqHx4vVz30eG53vR8SZR+Bgbi3a/lLjGA2mrKaFhBSjwRkz7qmI55lMxy5LQ==
   dependencies:
     "@improbable-eng/grpc-web-node-http-transport" "^0.12.0"
-    "@textile/grpc-powergate-client" "0.0.1-beta.13"
+    "@textile/grpc-powergate-client" "0.2.0"
 
 "@types/anymatch@*":
   version "1.3.1"

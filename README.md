@@ -15,6 +15,7 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
   * [X] Create and view multiple Filecoin Addresses and associate them with PowerGate token.
   * [X] Retrieve Pin (IPFS Hash where front-end deployed) from PinList using Express.js API endpoint that connects to Pinata (http://ethquad.herokuapp.com/api/getWebsiteIPFSHash)
   * [X] Display latest Pin (Website IPFS Hash) in front-end
+  * [X] Use Slate's "Make a Storage Deal" code to deploy a zip file of the website to Lotus Filecoin Testnet. Only works in 'development' environment where Lotus Filecoin Testnet and PowerGate Docker instances are running (see section "Connect to Lotus (Filecoin) and IPFS" below)
   * [ ] Modify the Slate's "Make a Storage Deal" code to deploy that latest Pin to Lotus Filecoin Testnet (not just Local)
     * [ ] Pending resolution of issues:
       * https://github.com/filecoin-project/slate/issues/71
@@ -59,11 +60,17 @@ yarn global add concurrently;
 
 * Download and run Docker
 * Clone https://github.com/textileio/powergate
-* Run
-```
-cd docker
-make localnet
-```
+* Connect to Lotus Filecoin
+  * "Local" Testnet
+    ```
+    cd powergate/docker
+    make localnet
+    ```
+  * Testnet https://github.com/textileio/powergate/blob/master/docker/Makefile
+    ```
+    cd powergate/docker 
+    make up
+    ```
 
 ## Develop website locally without deployment to IPFS
 
@@ -71,12 +78,12 @@ make localnet
 yarn dev
 ```
 
-* Go to http://localhost:3000
+* Go to http://localhost:4000 (since Prometheus runs on port 3000)
 
 ## Preview website redirecting to deployed to IPFS
 
 ```
-yarn dev:ipfs:preview
+yarn dev:ipfs:preview   
 ```
 
 * Go to http://localhost:5000

@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "@textile/powergate-client": "^0.1.0-beta.14",
+    "@textile/powergate-client": "0.2.0",
     "babel-loader": "^8.1.0",
     "bootstrap": "^4.5.0",
     "clean-webpack-plugin": "^3.0.0",
@@ -39,7 +39,7 @@
     "file-loader": "^6.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

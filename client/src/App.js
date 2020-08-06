@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as System from 'slate-react-system';
 import { createPow } from "@textile/powergate-client";
 import { Alert, Button, Container, Col, Row, Spinner } from "react-bootstrap";
-import pkg from '../../package.json';
 import { ETHQUAD_HOSTNAME_API } from './constants';
 import { toHexString } from './helpers';
 import { Greeter } from './components/Greeter';
@@ -15,6 +14,7 @@ class App extends Component {
   state = {
     info: null,
     isLoading: false,
+    isProd: process.env.NODE_ENV === 'production',
     // State keys to store in localStorage
     stateKeysForLocalStorage: ['token'],
     token: null,
@@ -22,7 +22,6 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
-    console.log(`EthQuad v${pkg.version}`);
     this.setState({ isLoading: true }, 
       async () => {
         await this.hydrateStateWithLocalStorage();
@@ -133,9 +132,10 @@ class App extends Component {
 
   getWebsiteIPFSHash = async () => {
     console.log('getWebsiteIPFSHash');
+    const { isProd } = this.state;
 
     // Request from EthQuad API hosted on Heroku in production
-    let hostname = process.env.NODE_ENV === 'production'
+    let hostname = isProd
       ? ETHQUAD_HOSTNAME_API
       : 'http://localhost:5000/';
     const url = new URL(`${hostname}api/getWebsiteIPFSHash`);
@@ -179,11 +179,39 @@ class App extends Component {
     }
   }
 
+  // Reference: https://github.com/filecoin-project/slate/blob/main/pages/experiences/make-storage-deal.js#L23
+  handleCreateFilecoinStorageDealForFile = async (data) => {
+    const file = data.file.files[0];
+    var buffer = [];
+    // NOTE(jim): A little hacky...
+    const getByteArray = async () =>
+      new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = function (e) {
+          if (e.target.readyState == FileReader.DONE) {
+            buffer = new Uint8Array(e.target.result);
+          }
+          resolve();
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    await getByteArray();
+    console.log('this.PowerGate.ffs', this.PowerGate.ffs);
+    const { cid } = await this.PowerGate.ffs.stage(buffer);
+    console.log('Creating Filecoin storage deal for file with cid: ', cid);
+    const { jobId } = await this.PowerGate.ffs.pushStorageConfig(cid);
+    console.log('Creating Filecoin storage deal for file with jobId: ', jobId);
+    const cancel = this.PowerGate.ffs.watchJobs((job) => {
+      console.log('Job log: ', job);
+    }, jobId);
+  }
+
   // Store Website IPFS Hash on Filecoin
+  // FIXME - unable to store only an IPFS hash on Filecoin since it is too small
   // Reference: https://github.com/filecoin-project/slate/blob/main/pages/experiences/make-storage-deal.js
-  handleCreateFilecoinStorageDeal = async () => {
+  handleCreateFilecoinStorageDealForIPFSHash = async () => {
     const { websiteIPFSHash } = this.state;
-    console.log('handleCreateFilecoinStorageDeal');
+    console.log('handleCreateFilecoinStorageDealForIPFSHash');
     // FIXME - how to check if any cid's exist in FFS without having to use a
     // try/catch block so it doesn't crash with error
     // `Uncaught (in promise) Error: stored item not found` if no items exist?
@@ -309,7 +337,7 @@ class App extends Component {
                 <Button
                   size='lg'
                   style={{backgroundColor: '#2935ff', fontSize: '0.75rem'}}
-                  onClick={this.handleCreateFilecoinStorageDeal}
+                  onClick={this.handleCreateFilecoinStorageDealForIPFSHash}
                 >
                   Save Website IPFS Hash to Filecoin Storage
                 </Button>
@@ -317,6 +345,13 @@ class App extends Component {
             </Row>
           ) : null
         }
+        <Row className="justify-content-md-center">
+          <Col xs={12} md={12}>
+            <System.CreateFilecoinStorageDeal
+              onSubmit={this.handleCreateFilecoinStorageDealForFile}
+            />
+          </Col>
+        </Row>
         <Row className="justify-content-md-center">
           <Col xs={12} md={12}>
             { info ? (
