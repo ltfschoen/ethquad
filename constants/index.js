@@ -7,6 +7,7 @@ const BUILD_IPFS_SUBDIRECTORY = IS_PROD ? 'ipfs/production' : 'ipfs/development'
 const BUILD_SKYNET_SUBDIRECTORY = 'skynet';
 const TRADITIONAL_DOMAIN = 'https://ethquad.herokuapp.com';
 const HANDSHAKE_DOMAIN_NAME = 'epiphysitis/';
+const SIA_SKYLINK_PORTAL_HANDSHARE_URL_PREFIX = 'https://siasky.net/hns/';
 
 module.exports = {
   BUILD_IPFS_SUBDIRECTORY,
@@ -17,5 +18,6 @@ module.exports = {
   INFURA_ENDPOINT_ETH2,
   IPFS_GATEWAY,
   IS_PROD,
+  SIA_SKYLINK_PORTAL_HANDSHARE_URL_PREFIX,
   TRADITIONAL_DOMAIN
 };

@@ -10,15 +10,18 @@ const fs = require('fs');
 const path = require('path');
 const { execute } = require('../helpers/execute');
 const { uploadFileToSkynet } = require('../server/helpers/uploadFileToSkynet');
-const { BUILD_SKYNET_SUBDIRECTORY, HANDSHAKE_DOMAIN_NAME, IS_PROD } = require('../constants');
+const { BUILD_SKYNET_SUBDIRECTORY, HANDSHAKE_DOMAIN_NAME,
+  IS_PROD, SIA_SKYLINK_PORTAL_HANDSHARE_URL_PREFIX } = require('../constants');
 
 const PATH_SOURCE_CODE = path.join(__dirname, '..', 'client', 'build');
 const WOPTS = { encoding: 'utf8', flag: 'w' };
 const PATH_SKYNET = path.join(__dirname, '..', 'client', 'build', BUILD_SKYNET_SUBDIRECTORY);
+const PATH_PROJECT_ROOT = path.join(__dirname, '..');
 
 function writeFiles(name, content) {
   [PATH_SOURCE_CODE].forEach((root) => {
     const filePath = `${root}/${BUILD_SKYNET_SUBDIRECTORY}/${name}`;
+    console.log('Writing to filePath: ', filePath);
     fs.writeFileSync(filePath, content, WOPTS,
       function() { console.log(`Wrote ${filePath}`) })
   });
@@ -29,7 +32,7 @@ function writeFiles(name, content) {
  */
 async function uploadFile() {
   execute(`mkdir -p ${PATH_SKYNET}`);
-  const url = `${HANDSHAKE_DOMAIN_NAME}`;
+  const url = `${SIA_SKYLINK_PORTAL_HANDSHARE_URL_PREFIX}${HANDSHAKE_DOMAIN_NAME}`;
   const html = `<!DOCTYPE html>
 <html>
   <head>
@@ -46,7 +49,10 @@ async function uploadFile() {
 </html>`;
   console.log('Writing files for redirecting to Handshake domain from Skynet hash (Skylink)');
   writeFiles('index.html', html);
-  return uploadFileToSkynet();
+  const { handshakePortalSkyLinkUrl, skylink } = await uploadFileToSkynet();
+  writeFiles('skylink.txt', skylink);
+  execute(`mv ${PATH_SKYNET}/skylink.txt ${PATH_PROJECT_ROOT}`);
+  return handshakePortalSkyLinkUrl
 }
 
 /**

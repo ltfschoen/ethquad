@@ -1,7 +1,14 @@
-# About
+---
+ETHQUAD
+---
 
-* HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
-* Sia + Namebase (Handshake) "Own the Internet" Hackathon https://gitcoin.co/hackathon/own-the-internet
+# Table of Contents
+  * [HackFS Hackathon Integration](#chapter-0)
+  * [Sia + Namebase (Handshake) "Own the Internet" Hackathon Integration](#chapter-1)
+
+# HackFS Hackathon Integration <a id="chapter-0"></a>
+
+* HackFS Hackathon team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
 
 ## Roadmap
 
@@ -34,7 +41,7 @@
     * [ ] Pending name server changes to propagate https://filecoinproject.slack.com/archives/C016UAP2N8Z/p1594877963245700. Note that this requires Unstoppable Domains to get the 'Redirect to Traditional Domain' functionality working
 * [X] Backend Express.js API connection to Infura Eth 2.0 Endpoint (https://altona.infura.io)
 
-### Optional
+#### Optional
 
 * [ ] Frontend deployed to IPFS Address using Fleek Continuous Deployment using Github
 * [ ] Logo deployed using Fleek Stage App JS SDK (@fleekhq/fleek-cli). See https://docs.fleek.co/storage/fleek-storage-js/
@@ -43,13 +50,120 @@
 * [ ] Desktop Fleek Space Daemon integration to share encrypted files privately with peers using Textile/IPFS node on Local Machine
 * [ ] Textiles ThreadDB/Buckets (instead of Fleek Space Daemon) since not running private Textile/IPFS node on Local Machine
 
-## Sia + Namebase (Handshake) "Own the Internet" Hackathon
+## Usage
 
-* [X] Upload redirection page to Skynet hash (Skylink) for redirecting to Handshake Domain Name potentially containing website
-  * [X] Upload file using Skynet Node.js SDK
-    * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
+* Go to https://ethquad.herokuapp.com.
 
-### About Sia + Namebase (Handshake)
+Note: Access to https://ethquad.crypto is in progress pending resolution to an IPFS Hash to direct it
+Note: Pending resolution of this issue https://github.com/ltfschoen/ethquad/issues/15
+
+## Development
+
+### Install dependencies
+
+* Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku and to match the version they use.
+```
+nvm use;
+yarn global add concurrently;
+```
+
+### Connect to Lotus (Filecoin) and IPFS
+
+* Download and run Docker
+* Clone https://github.com/textileio/powergate
+* Connect to Lotus Filecoin
+  * "Local" Testnet
+    ```
+    cd powergate/docker
+    make localnet
+    ```
+  * Testnet https://github.com/textileio/powergate/blob/master/docker/Makefile
+    ```
+    cd powergate/docker 
+    make up
+    ```
+
+### Develop website locally without deployment to IPFS
+
+* IMPORTANT: Wait until PowerGate is fully running before running this.
+```
+yarn dev
+```
+
+* Go to http://localhost:4000 (since Prometheus runs on port 3000)
+
+### Preview website redirecting to deployed to IPFS
+
+```
+yarn dev:ipfs:preview   
+```
+
+* Go to http://localhost:5000
+  * Important note: Use port 5000 since only running from server instead of client with proxy.
+  * Important: If the UI doesn't load, try running with `yarn dev` instead, since it may be caused by React.js that aren't being shown.
+
+#### View information about the ethquad.crypto domain name (provided by [Unstoppable Domains](https://unstoppabledomains.com/r/ce60aaca281f4ce))
+
+```
+node ./scripts/unstoppableDomainsRedirect.js
+```
+
+## Deployment (IPFS & Heroku)
+
+Generate an IPFS Hash (for redirecting the ethquad.crypto domain name to a traditional domain). Repeat this in future if the traditional domain name (i.e. ethquad.herokuapp.com) changes.
+
+Verify that the IPFS Hash has been created with name 'EthQuad-prod-traditional' at https://pinata.cloud/pinexplorer
+
+Go to https://unstoppabledomains.com/manage and change the IPFS Hash value the new IPFS Hash that is output to the terminal. Check for when the .crypto domain name resolves to the new IPFS Hash by running `node ./scripts/unstoppableDomainsRedirect.js` (without any flags). It will redirect when a value is output for `Read record of IPFS redirection hash:`.
+
+Alternatively try setting the IPFS Hash programmatically by running `node ./scripts/unstoppableDomainsRedirect.js --setRedirectIpfs`. However, this approach would require you to add the following to your .env file:
+* `ETHEREUM_ADDRESS` that owns the .crypto domain name
+* `MNEMONIC` phrase associate with the above Ethereum address
+* `INFURA_PROJECT_ID` and `INFURA_PROJECT_SECRET` to connect to Ethereum Mainnet using Infura
+Note that running `node ./scripts/unstoppableDomainsRedirect.js --setRedirectTraditionalDomain` to redirect the .crypto address to a Traditional Domain like https://ethquad.herokuapp.com directly is not currently supported by Unstoppable Domains.
+
+```
+yarn run build:release:ipfs-traditional-domain
+```
+
+Push changes to IPFS & Heroku
+```
+git push heroku master
+```
+
+Note: Heroku will build dependencies, then run the "heroku-postbuild" script in package.json. The "build:release:ipfs" script will deploy the front-end to an IPFS hash.
+
+Configure Heroku
+```
+heroku git:remote -a ethquad
+```
+
+Set Heroku Environment Variables to match the contents of the .env file. Replace missing values below:
+```
+heroku config:set \
+  KEY1=VALUE \
+  KEY2=VALUE
+
+heroku config --app ethquad
+```
+
+## Troubeshooting
+
+If you get a `nodemon` issue due to server already running on a port just run `ps -ef | grep node` and kill all associated processes `kill -9 <PID>`
+
+## Maintenance
+
+[MAINTENANCE.md](./MAINTENANCE.md)
+
+## References
+
+[REFERENCES.md](./REFERENCES.md)
+
+# Sia + Namebase (Handshake) "Own the Internet" Hackathon Integration <a id="chapter-1"></a>
+
+## About Sia + Namebase (Handshake)
+
+https://gitcoin.co/hackathon/own-the-internet
 
 * Goal:
   * Build a Skapp using Handshake and Skynet
@@ -92,110 +206,49 @@
 * Docs:
   * Skynet Node.js - https://nebulouslabs.github.io/skynet-docs/?javascript#introduction
 
-# Usage
+## Roadmap
 
-* Go to https://ethquad.herokuapp.com.
+### Sia + Namebase (Handshake) "Own the Internet" Hackathon
 
-Note: Access to https://ethquad.crypto is in progress pending resolution to an IPFS Hash to direct it
+* [X] Upload redirection page to Skynet hash (Skylink) for redirecting to Handshake Domain Name potentially containing website
+  * [X] Upload file using Skynet Node.js SDK
+    * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
 
-# Development
+## Usage 
 
-## Install dependencies
+### Deploy Redirect using Sia Skynet and Handshake
 
-* Install dependencies and run server and front-end. Note that Webpack is installed globally to avoid conflicts since it is installed automatically on Heroku and to match the version they use.
-```
-nvm use;
-yarn global add concurrently;
-```
-
-## Connect to Lotus (Filecoin) and IPFS
-
-* Download and run Docker
-* Clone https://github.com/textileio/powergate
-* Connect to Lotus Filecoin
-  * "Local" Testnet
-    ```
-    cd powergate/docker
-    make localnet
-    ```
-  * Testnet https://github.com/textileio/powergate/blob/master/docker/Makefile
-    ```
-    cd powergate/docker 
-    make up
-    ```
-
-## Develop website locally without deployment to IPFS
-
-* IMPORTANT: Wait until PowerGate is fully running before running this.
-```
-yarn dev
-```
-
-* Go to http://localhost:4000 (since Prometheus runs on port 3000)
-
-## Preview website redirecting to deployed to IPFS
+Create Sia Skynet Handshake URL. 
+Store copy of deployed redirection page in ./client/build/skynet/index.html 
+Store the Skylink in ./client/build/skynet/skylink.txt
 
 ```
-yarn dev:ipfs:preview   
+node ./scripts/siaSkynet.js
 ```
 
-* Go to http://localhost:5000
-  * Important note: Use port 5000 since only running from server instead of client with proxy.
-  * Important: If the UI doesn't load, try running with `yarn dev` instead, since it may be caused by React.js that aren't being shown.
-
-### View information about the ethquad.crypto domain name (provided by [Unstoppable Domains](https://unstoppabledomains.com/r/ce60aaca281f4ce))
+Set Namebase's Handshake DNS records to the Handshake domain using Namebase API
+Update `NAMEBASE_ACCESS_KEY` and `NAMEBASE_SECRET_KEY` in .env according to https://learn.namebase.io/advanced-topics/setting-dns-records#get-namebase-api-key.
+Assign `HNS_DOMAIN` below to your Handshake (HNS) Domain name (e.g. epiphysitis/)
 
 ```
-node ./scripts/unstoppableDomainsRedirect.js
+HNS_DOMAIN=epiphysitis node ./scripts/handshakeDomainSetSkynetPortalRecord.js
 ```
 
-# Deployment (IPFS & Heroku)
+Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink <SKYLINK>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes.
 
-Generate an IPFS Hash (for redirecting the ethquad.crypto domain name to a traditional domain). Repeat this in future if the traditional domain name (i.e. ethquad.herokuapp.com) changes.
+Verify the Handshake domain's resolve configuration has been updated at:
+* Check resolution response at these pages:
+  * https://siasky.net/hnsres/epiphysitis/
+  * https://siasky.net/hns/epiphysitis/
+* Check response by entering your Handshake domain name as a query (e.g. "epiphysitis") at this page:
+  * https://hns.to/
+* Note: The Blockchain DNS Records should update immediately here https://www.namebase.io/domain-manager/epiphysitis/, but it is necessary to wait for the changes to propagate.
 
-Verify that the IPFS Hash has been created with name 'EthQuad-prod-traditional' at https://pinata.cloud/pinexplorer
+## References:
 
-Go to https://unstoppabledomains.com/manage and change the IPFS Hash value the new IPFS Hash that is output to the terminal. Check for when the .crypto domain name resolves to the new IPFS Hash by running `node ./scripts/unstoppableDomainsRedirect.js` (without any flags). It will redirect when a value is output for `Read record of IPFS redirection hash:`.
-
-Alternatively try setting the IPFS Hash programmatically by running `node ./scripts/unstoppableDomainsRedirect.js --setRedirectIpfs`. However, this approach would require you to add the following to your .env file:
-* `ETHEREUM_ADDRESS` that owns the .crypto domain name
-* `MNEMONIC` phrase associate with the above Ethereum address
-* `INFURA_PROJECT_ID` and `INFURA_PROJECT_SECRET` to connect to Ethereum Mainnet using Infura
-Note that running `node ./scripts/unstoppableDomainsRedirect.js --setRedirectTraditionalDomain` to redirect the .crypto address to a Traditional Domain like https://ethquad.herokuapp.com directly is not currently supported by Unstoppable Domains.
-
-```
-yarn run build:release:ipfs-traditional-domain
-```
-
-Push changes to IPFS & Heroku
-```
-git push heroku master
-```
-
-Note: Heroku will build dependencies, then run the "heroku-postbuild" script in package.json. The "build:release:ipfs" script will deploy the front-end to an IPFS hash.
-
-Configure Heroku
-```
-heroku git:remote -a ethquad
-```
-
-Set Heroku Environment Variables to match the contents of the .env file. Replace missing values below:
-```
-heroku config:set \
-  KEY1=VALUE \
-  KEY2=VALUE
-
-heroku config --app ethquad
-```
-
-# Troubeshooting
-
-If you get a `nodemon` issue due to server already running on a port just run `ps -ef | grep node` and kill all associated processes `kill -9 <PID>`
-
-# Maintenance
-
-[MAINTENANCE.md](./MAINTENANCE.md)
-
-# References
-
-[REFERENCES.md](./REFERENCES.md)
+* API docs
+  * https://github.com/namebasehq/api-documentation
+* Set Handshake DNS
+  * https://learn.namebase.io/advanced-topics/setting-dns-records#using-the-script
+  * https://learn.namebase.io/advanced-topics/setting-dns-records#connecting-to-skynet
+* Verify Skylink record updated in Handshake Domain DNS Records: https://blog.sia.tech/skynet-handshake-d5d16e6b632f
