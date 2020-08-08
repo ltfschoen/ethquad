@@ -27,6 +27,7 @@
     "build:release:webpack": "cd client && cross-env SKIP_PREFLIGHT_CHECK=true ./node_modules/.bin/webpack --mode production --config ./webpack.config.js && cd ../"
   },
   "dependencies": {
+    "@nebulous/skynet": "git://github.com/NebulousLabs/nodejs-skynet.git#master",
     "@pinata/sdk": "^1.1.10",
     "@truffle/hdwallet-provider": "^1.0.38",
     "@unstoppabledomains/resolution": "^1.6.0",

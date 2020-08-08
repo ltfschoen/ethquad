@@ -1,8 +1,11 @@
 # About
 
-HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
+* HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3edbmDkFu
+* Sia + Namebase (Handshake) "Own the Internet" Hackathon https://gitcoin.co/hackathon/own-the-internet
 
 ## Roadmap
+
+### HackFS
 
 * [X] Frontend React.js & TypeScript boilerplate (./client)
 * [X] Backend Express.js API boilerplate (./server). Served at https://ethquad.herokuapp.com/api
@@ -39,6 +42,55 @@ HackFS team https://hack.ethglobal.co/hackfs/teams/recpspjxSRMexZJVg/recHa78c3ed
   * [ ] Reference the logo file using the Fleek Storage URL
 * [ ] Desktop Fleek Space Daemon integration to share encrypted files privately with peers using Textile/IPFS node on Local Machine
 * [ ] Textiles ThreadDB/Buckets (instead of Fleek Space Daemon) since not running private Textile/IPFS node on Local Machine
+
+## Sia + Namebase (Handshake) "Own the Internet" Hackathon
+
+* [X] Upload redirection page to Skynet hash (Skylink) for redirecting to Handshake Domain Name potentially containing website
+  * [X] Upload file using Skynet Node.js SDK
+    * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
+
+### About Sia + Namebase (Handshake)
+
+* Goal:
+  * Build a Skapp using Handshake and Skynet
+
+* Skynet
+  * About
+    * Offers decentralized filesharing and application hosting where the user owns the content instead of it being controled be a centralized entity (e.g. Youtube, Medium)
+    * Applications hosted on Skynet are decentralized apps called "skapps"
+  * Usage
+    * Create application
+    * Upload files or applications to Skynet so file available to all Portals
+    * Skylink returned may be downloaded and content viewed through any Portal
+    * Runs in browser supporting client-side applications
+  * Development
+    * API for web apps to upload and download data
+    * SDKs supported (JS, Node.js, etc)
+    * Build a Skynet Application
+      * Instal Node.js, Webpack
+      * Install skynet.js NPM package
+  * Hosting
+    * Portals may be run using Docker
+      * Github: https://github.com/NebulousLabs/skynet-webportal
+      * Requirements: 8Gb RAM, SSD
+      * Portals Ranked: https://siastats.info/skynet_stats
+      * Portal Examples (e.g. siasky.net, skyportal.xyz)
+
+* Handshake
+  * Skynet Portals run Handshake Full Nodes
+    * Endpoints allow users to load applications and content from Handshake domains and query Handshake domains for Skynet content
+
+* Examples
+  * Skybin
+  * Skylive - skylive.coolhd.hu
+  * Instasky - Upload and share media libraries
+  * iOS Uploader - Download on phone and share via Skynet
+  * Dgit - dgit.dev - decentralized Git
+  * SkyGallery - creates media galleries
+  * hns.to
+
+* Docs:
+  * Skynet Node.js - https://nebulouslabs.github.io/skynet-docs/?javascript#introduction
 
 # Usage
 
