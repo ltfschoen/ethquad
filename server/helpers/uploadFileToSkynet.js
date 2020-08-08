@@ -23,11 +23,6 @@ const convertSiaPortalUrlToHandshake = (portalUrl) => {
   return handshakeUrl;
 }
 
-// Update the resolver entry in the Handshake domain configuration so
-// the Handshake link will correctly point to the new content
-//
-// TODO
-
 const uploadFileToSkynet = async () => {
   console.log('Uploading file to Skynet');
   const skylinkUrl = await skynet.uploadFile(
