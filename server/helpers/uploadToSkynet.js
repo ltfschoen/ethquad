@@ -56,7 +56,11 @@ const uploadDirectoryToSkynet = async (directory) => {
   console.log('Uploading directory to Skynet: ', directory);
   const skylinkUrl = await skynet.uploadDirectory(
     directory,
-    { APIKey: process.env.SKYNET_API_KEY, customUserAgent: "Sia-Agent" }
+    {
+      APIKey: process.env.SKYNET_API_KEY,
+      customFilename: "EthQuad-Website",
+      customUserAgent: "Sia-Agent"
+    }
   );
   console.log(`Upload directory successful, skylink URL: ${skylinkUrl}`);
   const skylink = getSkylinkFromUrl(skylinkUrl);

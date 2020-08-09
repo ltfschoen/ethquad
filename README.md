@@ -212,7 +212,8 @@ https://gitcoin.co/hackathon/own-the-internet
 
 * [X] Upload a Redirection page file to Skynet hash (Skylink) using the Skynet Node.js SDK. The Skylink of the Redirection page redirects to a given Handshake Domain Name (e.g. epiphysitis/) at a Skynet Portal (e.g. https://siasky.net/hns/epiphysitis/).
   * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
-* [ ] Upload Website folder to a different Skylink using the Skynet Node.js SDK. Configure the Handshake Domain Name's DNS records to resolve to that Skylink
+* [X] Upload Website folder to a different Skylink using the Skynet Node.js SDK. Configure the Handshake Domain Name's DNS records to resolve to that Skylink
+  * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/48
 
 ## Usage 
 
@@ -223,8 +224,10 @@ Add your Handshake (HNS) Domain `HNS_DOMAIN` to the .env file (e.g. `HNS_DOMAIN=
 Run the following to:
 * Create Sia Skynet Handshake URL. 
 * Store copy of deployed Skylink Redirection page in ./client/build/skynet/index.html
+  * e.g. https://siasky.net/AAA2EiWgmyhNEE-7oNuDSvsP2aH6evDhX9V2NGI7_iKNcw
 * Store its Skylink in ./skylink-redirect.txt 
 * Deploy latest ./client/build/ folder to Skylink Website page.
+  * e.g. https://siasky.net/_B0uyyllCXACSXT66G4Rd7dQu_HN9XZiPRB3IYIQVuC-IQ/index.html
 * Store its Skylink in ./skylink-website.txt
 
 ```bash
