@@ -208,12 +208,26 @@ https://gitcoin.co/hackathon/own-the-internet
 
 ## Roadmap
 
-### Sia + Namebase (Handshake) "Own the Internet" Hackathon
-
 * [X] Upload a Redirection page file to Skynet hash (Skylink) using the Skynet Node.js SDK. The Skylink of the Redirection page redirects to a given Handshake Domain Name (e.g. epiphysitis/) at a Skynet Portal (e.g. https://siasky.net/hns/epiphysitis/).
   * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
 * [X] Upload Website folder to a different Skylink using the Skynet Node.js SDK. Configure the Handshake Domain Name's DNS records to resolve to that Skylink
   * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/48
+
+## Features
+
+EthQuad is an open-source application that has now been extended to integrate both the Sia Skynet and Handshake ecosystems, as a step toward building a platform to help developers build on Skynet and Handshake.
+
+It incorporates tooling to allow users to generate and upload a "redirection" page file to a Sia Skynet hash (Skylink) using the Skynet Node.js SDK to improve the developer experience. The "redirection" page may be configured to redirect to a given Handshake Domain Name (e.g. epiphysitis/) at a Skynet Portal (e.g. https://siasky.net/hns/epiphysitis/).
+
+The tooling allows users to generate and upload a "website" from a given website folder to a different Skylink using the Skynet Node.js SDK. The "website" at EthQuad includes a React.js front-end with TypeScript support. 
+
+The tooling authenticates with the Namebase API to allow users to configure their Handshake Domain Name's Blockchain DNS records to resolve to the Skylink of that "website".
+
+In future this tooling could be extracted into a separate application on the Skynet App Store, a CLI application, or an NPM library with configuration options to automatically generate a website using a chosen technical stack for customisation, then upload it to a Sia Skylink, and then automatically choose an freemium Handshake Domain Name and have it resolve to that Skylink.
+
+In the process of extending EthQuad, Namebase website user experience issues were raised by ltfschoen at feedback.namebase.io, Skynet Node.js SDK issues were raised at https://github.com/NebulousLabs/nodejs-skynet/issues/47 and https://github.com/NebulousLabs/nodejs-skynet/issues/48.
+
+Additional functionality is currently being investigated.
 
 ## Usage 
 
