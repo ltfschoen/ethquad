@@ -263,3 +263,4 @@ Verify the Handshake domain's resolve configuration has been updated by either:
   * https://learn.namebase.io/advanced-topics/setting-dns-records#using-the-script
   * https://learn.namebase.io/advanced-topics/setting-dns-records#connecting-to-skynet
 * Verify Skylink record updated in Handshake Domain DNS Records: https://blog.sia.tech/skynet-handshake-d5d16e6b632f
+* View Handshake Transaction History: https://hnscan.com
