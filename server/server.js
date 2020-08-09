@@ -15,7 +15,8 @@ const corsWhitelist = [
   'http://localhost:3000',
   'http://localhost:4000',
   'http://localhost:5000',
-  'https://ipfs.io'
+  'https://ipfs.io',
+  'https://siasky.net'
 ];
 // https://www.npmjs.com/package/cors#configuration-options
 const corsOptions = {

@@ -61,7 +61,9 @@ async function uploadFile() {
  */
 async function uploadWebsite() {
   const directory = PATH_SOURCE_CODE;
+  execute(`./scripts/index_remove_public.sh`);
   const { handshakePortalSkyLinkUrl, skylink } = await uploadDirectoryToSkynet(directory);
+  execute(`./scripts/index_restore_public.sh`);
   writeFiles('skylink-website.txt', skylink);
   execute(`mv ${PATH_SKYNET}/skylink-website.txt ${PATH_PROJECT_ROOT}`);
   return handshakePortalSkyLinkUrl

@@ -49,6 +49,12 @@ class Beacon extends Component {
   render() {
     const { isLoading, response, responseMsg } = this.state;
 
+    console.log('response: ', response);
+    console.log('responseMsg: ', responseMsg);
+
+    if (!response || !Object.keys(response).length) {
+      return <div>Unable to connect to Beacon Chain.</div>;
+    }
     return (
       <Container fluid>
         <Row className="justify-content-md-center">
@@ -72,16 +78,13 @@ class Beacon extends Component {
                 </Row>
               ) : null
             }
-            { response ? (
-                <Row className="justify-content-md-center">
-                  <Col xs={12} md={12}>
-                    <Alert variant="info">
-                      <ReactJson src={response} theme="monokai" />
-                    </Alert>
-                  </Col>
-                </Row>
-              ) : null
-            }
+            <Row className="justify-content-md-center">
+              <Col xs={12} md={12}>
+                <Alert variant="info">
+                  <ReactJson src={response} theme="monokai" />
+                </Alert>
+              </Col>
+            </Row>
             {
               isLoading ? (
                 <Spinner animation="border" variant="primary" />
