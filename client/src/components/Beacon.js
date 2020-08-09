@@ -49,9 +49,6 @@ class Beacon extends Component {
   render() {
     const { isLoading, response, responseMsg } = this.state;
 
-    console.log('response: ', response);
-    console.log('responseMsg: ', responseMsg);
-
     if (!response || !Object.keys(response).length) {
       return <div>Unable to connect to Beacon Chain.</div>;
     }
