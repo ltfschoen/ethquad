@@ -19,17 +19,19 @@ async function main() {
   console.log(`Handshake domain name: ${process.env.HNS_DOMAIN}/`)
 
   // Authorization using Namebase's API to connect to Namebase.io Nameservers
-  console.log("Authorizing using Namebase's API...");
+  console.log("Authorizing using Namebase's API. Retrieving Blockchain DNS Records");
   execute(`node ./scripts/namebaseApi.js get blockchain ${process.env.HNS_DOMAIN}`);
   console.log("Authorized using Namebase's API to connect to Namebase.io Nameservers");
 
-  // Set Namebase's Handshake DNS records to the Handshake domain using Namebase API
-  console.log(`Setting Namebase's Handshake DNS records...`);
-  execute(`node ./scripts/namebaseApi.js put blockchain ${process.env.HNS_DOMAIN} \
-  '{"records":[{"type":"TXT","host":"","value":"${skylink}/index.html","ttl":0},{"type":"NS","host":"ns1","value":"44.231.6.183","ttl":10800}]}'`);
+  if (process.env.PUT === 'true') {
+    // Set Namebase's Handshake DNS records to the Handshake domain using Namebase API
+    console.log(`Setting Namebase's Handshake DNS records...`);
+    execute(`node ./scripts/namebaseApi.js put blockchain ${process.env.HNS_DOMAIN} \
+    '{"records":[{"type":"TXT","host":"","value":"${skylink}/index.html","ttl":0},{"type":"NS","host":"ns1","value":"44.231.6.183","ttl":10800}]}'`);
 
-  console.log(`Set Namebase's Handshake DNS records to the Handshake domain: ${process.env.HNS_DOMAIN}/`);
-  console.log('Please wait ~10 minutes for the domain changes to propagate and sync across Handshake nodes');
+    console.log(`Set Namebase's Handshake DNS records to the Handshake domain: ${process.env.HNS_DOMAIN}/`);
+    console.log('Please wait for the domain changes to propagate and sync across Handshake nodes. Check upToDate for status.');
+  }
 }
 
 main()

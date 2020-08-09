@@ -222,7 +222,7 @@ Create Sia Skynet Handshake URL.
 Store copy of deployed redirection page in ./client/build/skynet/index.html 
 Store the Skylink in ./client/build/skynet/skylink.txt
 
-```
+```bash
 node ./scripts/siaSkynet.js
 ```
 
@@ -230,13 +230,17 @@ Set Namebase's Handshake DNS records to the Handshake domain using Namebase API
 Update `NAMEBASE_ACCESS_KEY` and `NAMEBASE_SECRET_KEY` in .env according to https://learn.namebase.io/advanced-topics/setting-dns-records#get-namebase-api-key.
 Assign `HNS_DOMAIN` below to your Handshake (HNS) Domain name (e.g. epiphysitis/)
 
-```
-HNS_DOMAIN=epiphysitis node ./scripts/handshakeDomainSetSkynetPortalRecord.js
+```bash
+HNS_DOMAIN=epiphysitis \
+  PUT=true \
+  node ./scripts/handshakeDomainSetSkynetPortalRecord.js
 ```
 
-Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink <SKYLINK>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes.
+Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink <SKYLINK>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes. If you change the NS record is may take more than a day for changes to propagate.
 
 Verify the Handshake domain's resolve configuration has been updated at:
+* Running `HNS_DOMAIN=epiphysitis node ./scripts/handshakeDomainSetSkynetPortalRecord.js`.
+  * Check that `upToDate` value has changef to `true`
 * Check resolution response at these pages:
   * https://siasky.net/hnsres/epiphysitis/
   * https://siasky.net/hns/epiphysitis/
