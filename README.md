@@ -210,36 +210,67 @@ https://gitcoin.co/hackathon/own-the-internet
 
 ### Sia + Namebase (Handshake) "Own the Internet" Hackathon
 
-* [X] Upload redirection page to Skynet hash (Skylink) for redirecting to Handshake Domain Name potentially containing website
-  * [X] Upload file using Skynet Node.js SDK
-    * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
+* [X] Upload a Redirection page file to Skynet hash (Skylink) using the Skynet Node.js SDK. The Skylink of the Redirection page redirects to a given Handshake Domain Name (e.g. epiphysitis/) at a Skynet Portal (e.g. https://siasky.net/hns/epiphysitis/).
+  * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
+* [X] Upload Website folder to a different Skylink using the Skynet Node.js SDK. Configure the Handshake Domain Name's DNS records to resolve to that Skylink
+  * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/48
 
 ## Usage 
 
 ### Deploy Redirect using Sia Skynet and Handshake
 
-Create Sia Skynet Handshake URL. 
-Store copy of deployed redirection page in ./client/build/skynet/index.html 
-Store the Skylink in ./client/build/skynet/skylink.txt
+Connect to Lotus (Filecoin) and IPFS (see section "Connect to Lotus (Filecoin) and IPFS")
 
+Add your Handshake (HNS) Domain `HNS_DOMAIN` to the .env file (e.g. `HNS_DOMAIN=epiphysitis`)
+
+Build the website for Development or Production. If Development is chosen the backend API is expected to be running on localhost:5000/api instead of at https://ethquad.herokuapp.com/api.
+
+* IMPORTANT: If using PowerGate, wait until it is fully running before running the following.
+
+* Development (without Skylink deployment)
+  ```bash
+  yarn dev
+  ```
+  * Go to http://localhost:4000 (since Prometheus runs on port 3000)
+
+* Development (using Skynet)
+  ```bash
+  yarn dev:build:sia-handlebars
+  ```
+
+* Production (using Skynet)
+  ```bash
+  yarn build:release:sia-handlebars
+  ```
+
+When using Skynet will run the following:
+* Create Sia Skynet Handshake URL. 
+* Store copy of deployed Skylink Redirection page in ./client/build/skynet/index.html
+  * e.g. https://siasky.net/AAA2EiWgmyhNEE-7oNuDSvsP2aH6evDhX9V2NGI7_iKNcw
+* Store its Skylink in ./skylink-redirect.txt 
+* Deploy latest ./client/build/ folder to Skylink Website page.
+  * e.g. https://siasky.net/_B0uyyllCXACSXT66G4Rd7dQu_HN9XZiPRB3IYIQVuC-IQ/index.html
+* Store its Skylink in ./skylink-website.txt
+
+Run the server
 ```bash
-node ./scripts/siaSkynet.js
+yarn dev:server:sia-handlebars
 ```
 
-Set Namebase's Handshake DNS records to the Handshake domain using Namebase API
-Update `NAMEBASE_ACCESS_KEY` and `NAMEBASE_SECRET_KEY` in .env according to https://learn.namebase.io/advanced-topics/setting-dns-records#get-namebase-api-key.
-Assign `HNS_DOMAIN` below to your Handshake (HNS) Domain name (e.g. epiphysitis/)
+Go to https://siasky.net/<SKYLINK_WEBSITE>
+
+Run the following to:
+* Set Namebase's Handshake DNS records of the Handshake domain using Namebase API
+Update `NAMEBASE_ACCESS_KEY` and `NAMEBASE_SECRET_KEY` in .env according to https://learn.namebase.io/advanced-topics/setting-dns-records#get-namebase-api-key so that it resolves to index.html file in the website folder at the Skylink that was recorded in ./skylink-website.txt
 
 ```bash
-HNS_DOMAIN=epiphysitis \
-  PUT=true \
-  node ./scripts/handshakeDomainSetSkynetPortalRecord.js
+PUT=true node ./scripts/handshakeDomainSetSkynetPortalRecord.js
 ```
 
-Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink <SKYLINK>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes. If you change the NS record is may take more than a day for changes to propagate.
+Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink of the Website <SKYLINK_WEBSITE>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes. If you change the NS record too it may take more than a day for changes to propagate.
 
-Verify the Handshake domain's resolve configuration has been updated at:
-* Running `HNS_DOMAIN=epiphysitis node ./scripts/handshakeDomainSetSkynetPortalRecord.js`.
+Verify the Handshake domain's resolve configuration has been updated by either:
+* Running `node ./scripts/handshakeDomainSetSkynetPortalRecord.js`.
   * Check that `upToDate` value has changef to `true`
 * Check resolution response at these pages:
   * https://siasky.net/hnsres/epiphysitis/
@@ -256,3 +287,4 @@ Verify the Handshake domain's resolve configuration has been updated at:
   * https://learn.namebase.io/advanced-topics/setting-dns-records#using-the-script
   * https://learn.namebase.io/advanced-topics/setting-dns-records#connecting-to-skynet
 * Verify Skylink record updated in Handshake Domain DNS Records: https://blog.sia.tech/skynet-handshake-d5d16e6b632f
+* View Handshake Transaction History: https://hnscan.com

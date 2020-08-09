@@ -31,3 +31,5 @@ yarn-debug.log*
 yarn-error.log*
 
 skylink.txt
+skylink-redirect.txt
+skylink-website.txt

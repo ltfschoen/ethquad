@@ -15,6 +15,7 @@ class App extends Component {
     info: null,
     isLoading: false,
     isProd: process.env.NODE_ENV === 'production',
+    powergateMsg: null,
     // State keys to store in localStorage
     stateKeysForLocalStorage: ['token'],
     token: null,
@@ -59,6 +60,11 @@ class App extends Component {
       FFS = await this.PowerGate.ffs.create();
     } catch(error) {
       console.error("Unable to connect to Powergate network");
+      this.setState({
+        isLoading: false,
+        token: null,
+        powergateMsg: "Unable to connect to Powergate"
+      });
       throw("Unable to connect to Powergate: ", error);
     }
     let tokenToUse;
@@ -68,6 +74,10 @@ class App extends Component {
       console.log('Created token: ', tokenToUse);
       this.updateLocalStorage('token', tokenToUse);
       await this.PowerGate.setToken(tokenToUse);
+      this.setState({
+        powergateMsg: null,
+        token: tokenToUse
+      });
     }
     if (token) {
       tokenToUse = token;
@@ -302,12 +312,17 @@ class App extends Component {
   }
 
   render() {
-    const { info, isLoading, token, websiteIPFSHash } = this.state;
+    const { info, isLoading, token, powergateMsg, websiteIPFSHash } = this.state;
+
     return (
       <Container fluid className="App">
         <Row className="justify-content-md-center">
           <Col>
             <Greeter name='EthQuad'/>
+            { powergateMsg ? (
+                <div>{powergateMsg}</div>
+              ) : null
+            }
             { websiteIPFSHash ? (
                 <Alert variant="info">
                   Website IPFS Hash: { websiteIPFSHash }
@@ -345,26 +360,32 @@ class App extends Component {
             </Row>
           ) : null
         }
-        <Row className="justify-content-md-center">
-          <Col xs={12} md={12}>
-            <System.CreateFilecoinStorageDeal
-              onSubmit={this.handleCreateFilecoinStorageDealForFile}
-            />
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col xs={12} md={12}>
-            { info ? (
-                <System.FilecoinBalancesList
-                  data={info.balancesList}
+        { token ? (
+          <Row className="justify-content-md-center">
+            <Col xs={12} md={12}>
+              <System.CreateFilecoinStorageDeal
+                onSubmit={this.handleCreateFilecoinStorageDealForFile}
+              />
+            </Col>
+          </Row>
+          ) : null
+        }
+        { token ? (
+            <Row className="justify-content-md-center">
+              <Col xs={12} md={12}>
+                { info ? (
+                    <System.FilecoinBalancesList
+                      data={info.balancesList}
+                    />
+                  ) : null
+                }
+                <System.CreateFilecoinAddress
+                  onSubmit={this.handleCreateAddress}
                 />
-              ) : null
-            }
-            <System.CreateFilecoinAddress
-              onSubmit={this.handleCreateAddress}
-            />
-          </Col>
-        </Row>
+              </Col>
+            </Row>
+          ) : null
+        }
         <Beacon />
       </Container>
     );
