@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const skynet = require('@nebulous/skynet');
+const internetAvailable = require('internet-available');
 const { HANDSHAKE_DOMAIN_NAME } = require('../../constants');
 
 const getSkylinkFromUrl = (url) => {
@@ -23,16 +24,45 @@ const convertSiaPortalUrlToHandshake = (portalUrl) => {
   return handshakeUrl;
 }
 
-const uploadFileToSkynet = async () => {
+const uploadFileToSkynet = async (filename) => {
+  internetAvailable().then(function(){
+    console.log("Internet available");
+  }).catch(function(){
+      console.log("No internet");
+  });
   console.log('Uploading file to Skynet');
   const skylinkUrl = await skynet.uploadFile(
-    path.join(process.cwd(), 'client', 'build', 'skynet', 'index.html'),
+    path.join(process.cwd(), 'client', 'build', 'skynet', filename),
     { APIKey: process.env.SKYNET_API_KEY, customUserAgent: "Sia-Agent" }
   );
-  console.log(`Upload successful, skylink URL: ${skylinkUrl}`);
+  console.log(`Upload file successful, skylink URL: ${skylinkUrl}`);
   const skylink = getSkylinkFromUrl(skylinkUrl);
   const portalSkyLinkUrl = convertSiaUrlToSiaPortalUrl(skylinkUrl);
   console.log(`View file at Sia Skylink Portal: ${portalSkyLinkUrl}`);
+  const handshakePortalSkyLinkUrl = convertSiaPortalUrlToHandshake(portalSkyLinkUrl);
+
+  return {
+    handshakePortalSkyLinkUrl,
+    skylink
+  };
+}
+
+/**
+ * Upload Directory to Skynet
+ *
+ * https://nebulouslabs.github.io/skynet-docs/?javascript--node#uploading-a-directory
+ */
+const uploadDirectoryToSkynet = async (directory) => {
+  console.log('Uploading directory to Skynet: ', directory);
+  const skylinkUrl = await skynet.uploadDirectory(
+    directory,
+    { APIKey: process.env.SKYNET_API_KEY, customUserAgent: "Sia-Agent" }
+  );
+  console.log(`Upload directory successful, skylink URL: ${skylinkUrl}`);
+  const skylink = getSkylinkFromUrl(skylinkUrl);
+  const portalSkyLinkUrl = convertSiaUrlToSiaPortalUrl(skylinkUrl);
+  console.log(`View folder at Sia Skylink Portal: ${portalSkyLinkUrl}`);
+  console.log(`View website at Sia Skylink Portal: ${portalSkyLinkUrl}/index.html`);
   const handshakePortalSkyLinkUrl = convertSiaPortalUrlToHandshake(portalSkyLinkUrl);
   console.log('Please configure Blockchain DNS Records for Handshake');
 
@@ -43,5 +73,6 @@ const uploadFileToSkynet = async () => {
 }
 
 module.exports = {
-  uploadFileToSkynet
+  uploadFileToSkynet,
+  uploadDirectoryToSkynet
 }

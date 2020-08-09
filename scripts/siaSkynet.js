@@ -9,9 +9,9 @@ require('dotenv').config()
 const fs = require('fs');
 const path = require('path');
 const { execute } = require('../helpers/execute');
-const { uploadFileToSkynet } = require('../server/helpers/uploadFileToSkynet');
+const { uploadFileToSkynet, uploadDirectoryToSkynet } = require('../server/helpers/uploadToSkynet');
 const { BUILD_SKYNET_SUBDIRECTORY, HANDSHAKE_DOMAIN_NAME,
-  IS_PROD, SIA_SKYLINK_PORTAL_HANDSHARE_URL_PREFIX } = require('../constants');
+  IS_PROD, SIA_SKYLINK_PORTAL_HANDSHAKE_URL_PREFIX } = require('../constants');
 
 const PATH_SOURCE_CODE = path.join(__dirname, '..', 'client', 'build');
 const WOPTS = { encoding: 'utf8', flag: 'w' };
@@ -31,8 +31,9 @@ function writeFiles(name, content) {
  * Skynet hash (Skylink) redirection to Handshake domain name
  */
 async function uploadFile() {
+  const filename = 'index.html';
   execute(`mkdir -p ${PATH_SKYNET}`);
-  const url = `${SIA_SKYLINK_PORTAL_HANDSHARE_URL_PREFIX}${HANDSHAKE_DOMAIN_NAME}`;
+  const url = `${SIA_SKYLINK_PORTAL_HANDSHAKE_URL_PREFIX}${HANDSHAKE_DOMAIN_NAME}`;
   const html = `<!DOCTYPE html>
 <html>
   <head>
@@ -48,10 +49,21 @@ async function uploadFile() {
   </body>
 </html>`;
   console.log('Writing files for redirecting to Handshake domain from Skynet hash (Skylink)');
-  writeFiles('index.html', html);
-  const { handshakePortalSkyLinkUrl, skylink } = await uploadFileToSkynet();
-  writeFiles('skylink.txt', skylink);
-  execute(`mv ${PATH_SKYNET}/skylink.txt ${PATH_PROJECT_ROOT}`);
+  writeFiles(filename, html);
+  const { handshakePortalSkyLinkUrl, skylink } = await uploadFileToSkynet(filename);
+  writeFiles('skylink-redirect.txt', skylink);
+  execute(`mv ${PATH_SKYNET}/skylink-redirect.txt ${PATH_PROJECT_ROOT}`);
+  return handshakePortalSkyLinkUrl
+}
+
+/**
+ * Skynet hash (Skylink) containing website
+ */
+async function uploadWebsite() {
+  const directory = PATH_SOURCE_CODE;
+  const { handshakePortalSkyLinkUrl, skylink } = await uploadDirectoryToSkynet(directory);
+  writeFiles('skylink-website.txt', skylink);
+  execute(`mv ${PATH_SKYNET}/skylink-website.txt ${PATH_PROJECT_ROOT}`);
   return handshakePortalSkyLinkUrl
 }
 
@@ -59,7 +71,8 @@ async function uploadFile() {
  * Upload the EthQuad source code Skynet hash using Skynet SDK.
  */
 async function main() {
-  const siaSkylink = await uploadFile();
+  const siaSkylinkRedirect = await uploadFile();
+  const siaSkylinkWebsite = await uploadWebsite();
 }
 
 main()

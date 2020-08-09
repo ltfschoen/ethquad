@@ -210,36 +210,40 @@ https://gitcoin.co/hackathon/own-the-internet
 
 ### Sia + Namebase (Handshake) "Own the Internet" Hackathon
 
-* [X] Upload redirection page to Skynet hash (Skylink) for redirecting to Handshake Domain Name potentially containing website
-  * [X] Upload file using Skynet Node.js SDK
-    * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
+* [X] Upload a Redirection page file to Skynet hash (Skylink) using the Skynet Node.js SDK. The Skylink of the Redirection page redirects to a given Handshake Domain Name (e.g. epiphysitis/) at a Skynet Portal (e.g. https://siasky.net/hns/epiphysitis/).
+  * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
+* [ ] Upload Website folder to a different Skylink using the Skynet Node.js SDK. Configure the Handshake Domain Name's DNS records to resolve to that Skylink
 
 ## Usage 
 
 ### Deploy Redirect using Sia Skynet and Handshake
 
-Create Sia Skynet Handshake URL. 
-Store copy of deployed redirection page in ./client/build/skynet/index.html 
-Store the Skylink in ./client/build/skynet/skylink.txt
+Add your Handshake (HNS) Domain `HNS_DOMAIN` to the .env file (e.g. `HNS_DOMAIN=epiphysitis`)
+
+Run the following to:
+* Create Sia Skynet Handshake URL. 
+* Store copy of deployed Skylink Redirection page in ./client/build/skynet/index.html
+* Store its Skylink in ./skylink-redirect.txt 
+* Deploy latest ./client/build/ folder to Skylink Website page.
+* Store its Skylink in ./skylink-website.txt
 
 ```bash
 node ./scripts/siaSkynet.js
 ```
 
-Set Namebase's Handshake DNS records to the Handshake domain using Namebase API
-Update `NAMEBASE_ACCESS_KEY` and `NAMEBASE_SECRET_KEY` in .env according to https://learn.namebase.io/advanced-topics/setting-dns-records#get-namebase-api-key.
-Assign `HNS_DOMAIN` below to your Handshake (HNS) Domain name (e.g. epiphysitis/)
+Run the following to:
+* Set Namebase's Handshake DNS records of the Handshake domain using Namebase API
+Update `NAMEBASE_ACCESS_KEY` and `NAMEBASE_SECRET_KEY` in .env according to https://learn.namebase.io/advanced-topics/setting-dns-records#get-namebase-api-key so that it resolves to index.html file in the website folder at the Skylink that was recorded in ./skylink-website.txt
 
 ```bash
-HNS_DOMAIN=epiphysitis \
-  PUT=true \
+PUT=true \
   node ./scripts/handshakeDomainSetSkynetPortalRecord.js
 ```
 
-Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink <SKYLINK>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes. If you change the NS record is may take more than a day for changes to propagate.
+Alternatvely, manually update the Handshake domain's DNS records by going to https://www.namebase.io/domain-manager/<HANDSHAKE_DOMAIN_NAME> and adding a TXT record that points the domain to the Skylink of the Website <SKYLINK_WEBSITE>/index.html, and then waiting ~10 minutes for domain changes to propagate through Handshake nodes syncing the changes. If you change the NS record too it may take more than a day for changes to propagate.
 
-Verify the Handshake domain's resolve configuration has been updated at:
-* Running `HNS_DOMAIN=epiphysitis node ./scripts/handshakeDomainSetSkynetPortalRecord.js`.
+Verify the Handshake domain's resolve configuration has been updated by either:
+* Running `node ./scripts/handshakeDomainSetSkynetPortalRecord.js`.
   * Check that `upToDate` value has changef to `true`
 * Check resolution response at these pages:
   * https://siasky.net/hnsres/epiphysitis/
