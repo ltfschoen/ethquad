@@ -212,6 +212,11 @@ https://gitcoin.co/hackathon/own-the-internet
   * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/47
 * [X] Upload Website folder to a different Skylink using the Skynet Node.js SDK. Configure the Handshake Domain Name's DNS records to resolve to that Skylink
   * [X] Issue raised https://github.com/NebulousLabs/nodejs-skynet/issues/48
+* [X] Deploy and host a game on Sia Skynet, as suggested [here](https://www.notion.so/Sia-Own-the-Internet-Hackathon-Ideas-c9b8921a2d6a4faf82877ec03ec3f3a9), by using the tooling for Sia Skynet and Handshake that was initially created in this EthQuad project in my other open-source decentralized game FlappyTips, which is built with React.js and p5.js, it may be deployed to a Skylink hash (e.g. https://siasky.net/AADhTfgZns00r6rYpyThLQwLDxAea57EegdNN-leYGf07w/) and associated with a Handshake domain (e.g. https://siasky.net/hns/flappy) in this Pull Request https://github.com/ltfschoen/flappytips/pull/15.
+  * [X] Issue was raised here and needs to be merged to support uploading large build/ directories (e.g. 16MB) https://github.com/NebulousLabs/nodejs-skynet/issues/49
+  * [ ] Purchase Handshake domain name: flappy/
+* [ ] Update FlappyTips to integrate Sia Skynet into gameplay by using this skynet-js BrowserJS library https://github.com/NebulousLabs/skynet-js
+* [ ] Add FlappyTips game to [Skynet AppStore](https://skynethub.io/_B3VrECGOHPEAFknVQwj_vWsyaX_8iIRuB_TL09cuj9uZQ/index.html#/apps/all)
 
 ## Features
 
@@ -226,6 +231,8 @@ The tooling authenticates with the Namebase API to allow users to configure thei
 In future this tooling could be extracted into a separate application on the Skynet App Store, a CLI application, or an NPM library with configuration options to automatically generate a website using a chosen technical stack for customisation, then upload it to a Sia Skylink, and then automatically choose an freemium Handshake Domain Name and have it resolve to that Skylink.
 
 In the process of extending EthQuad, Namebase website user experience issues were raised by ltfschoen at feedback.namebase.io, Skynet Node.js SDK issues were raised at https://github.com/NebulousLabs/nodejs-skynet/issues/47 and https://github.com/NebulousLabs/nodejs-skynet/issues/48.
+
+The tooling for Sia Skynet and Handshake that was created in this project was applied to my other open-source decentralized game FlappyTips, which is built with React.js and p5.js, to deploy it to a Skylink hash (e.g. https://siasky.net/AADhTfgZns00r6rYpyThLQwLDxAea57EegdNN-leYGf07w/) and associated with a Handshake domain (e.g. https://siasky.net/hns/flappy) in this Pull Request https://github.com/ltfschoen/flappytips/pull/15.
 
 Additional functionality is currently being investigated.
 
